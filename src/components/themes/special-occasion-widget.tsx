@@ -484,7 +484,7 @@ function getThemeContent(theme: string, lang: string) {
                             opacity: 0.1
                         }} />
                         <div style={{
-                            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                            position: 'absolute', top: '50%', left: '50%',
                             width: '80%', height: '80%',
                             border: '1px solid rgba(255,215,0,0.1)',
                             transform: 'translate(-50%, -50%) rotate(45deg)',
