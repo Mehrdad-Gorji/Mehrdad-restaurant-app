@@ -20,7 +20,7 @@ const ADMIN_ROLES = [
     { value: 'DELIVERY', label: '🚚 Delivery', desc: 'Order view for delivery personnel' }
 ];
 
-export default function AdminUserManager({ admins, currentAdminId }: { admins: AdminUser[], currentAdminId: string }) {
+export default function AdminUserManager({ admins, currentAdminId }: { admins: any[], currentAdminId: string }) {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
