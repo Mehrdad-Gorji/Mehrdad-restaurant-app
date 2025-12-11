@@ -9,7 +9,7 @@ export default async function OffersPage({ params }: { params: Promise<{ lang: s
     const dict = await getDictionary(locale);
 
     // Fetch active offers
-    let offers = [];
+    let offers: any[] = [];
     try {
         // @ts-ignore
         offers = await prisma.offer.findMany({
