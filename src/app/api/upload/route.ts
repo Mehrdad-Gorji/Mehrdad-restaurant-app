@@ -13,6 +13,20 @@ export async function POST(request: NextRequest) {
             urlPrefix: supabaseUrl?.substring(0, 8)
         });
 
+        // Check for non-ASCII characters (like Persian numbers) in env vars
+        const isAscii = (str: string) => /^[\x00-\x7F]*$/.test(str);
+
+        if (supabaseUrl && !isAscii(supabaseUrl)) {
+            console.error("❌ CRTICAL ERROR: `NEXT_PUBLIC_SUPABASE_URL` contains non-English characters (e.g. Persian numbers)!");
+            return NextResponse.json({ error: 'Env var config error: URL has non-English chars' }, { status: 500 });
+        }
+        if (supabaseKey && !isAscii(supabaseKey)) {
+            console.error("❌ CRTICAL ERROR: `SUPABASE_SERVICE_ROLE_KEY` contains non-English characters (e.g. Persian numbers)!");
+            // Attempt to sanitize: replace Persian numbers with English
+            // But for now just fail to let user know
+            return NextResponse.json({ error: 'Env var config error: KEY has non-English chars. Check Vercel settings.' }, { status: 500 });
+        }
+
         if (!supabaseUrl || !supabaseKey) {
             console.error("❌ Missing Supabase Configuration");
             return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
@@ -29,19 +43,15 @@ export async function POST(request: NextRequest) {
 
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        console.log("File Info:", { name: file.name, type: file.type, size: file.size });
-
-        // Force ASCII filename and PNG extension to debug encoding error
-        // ERROR was: character at index 18 has value 1575
-        const filename = `img_${Date.now()}_${Math.random().toString(36).substring(7)}.png`;
-
-        console.log("Generated Filename:", filename);
+        // Generate a safe, random filename (ASCII only) to avoid encoding issues
+        const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
+        const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
 
         // Upload to Supabase Storage
         const { data, error } = await supabase.storage
             .from('images')
             .upload(filename, buffer, {
-                contentType: 'image/png', // Force simple content type
+                contentType: file.type || 'image/png',
                 upsert: false
             });
 

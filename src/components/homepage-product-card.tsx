@@ -50,7 +50,7 @@ export default function HomepageProductCard({ product, lang }: ProductCardProps)
                 <div style={{
                     height: '180px',
                     background: product.image
-                        ? `url(${product.image.startsWith('/') ? product.image : `/uploads/${product.image}`}) center/cover`
+                        ? `url(${product.image.startsWith('/') || product.image.startsWith('http') ? product.image : `/uploads/${product.image}`}) center/cover`
                         : 'linear-gradient(135deg, #2a2a2a, #1a1a1a)',
                     position: 'relative'
                 }}>
