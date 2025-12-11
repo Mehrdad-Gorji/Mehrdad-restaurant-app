@@ -88,10 +88,14 @@ export async function GET(request: NextRequest) {
                 },
                 extras: {
                     include: {
-                        translations: true,
-                        category: {
+                        extra: {
                             include: {
-                                translations: true
+                                translations: true,
+                                category: {
+                                    include: {
+                                        translations: true
+                                    }
+                                }
                             }
                         }
                     }
