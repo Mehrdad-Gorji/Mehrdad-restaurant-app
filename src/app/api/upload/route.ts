@@ -28,7 +28,9 @@ export async function POST(request: NextRequest) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = Date.now() + '_' + file.name.replaceAll(' ', '_');
+        // Sanitize filename: remove non-ASCII chars
+        const safeName = file.name.replace(/[^\x00-\x7F]/g, '').replaceAll(' ', '_') || 'image';
+        const filename = Date.now() + '_' + safeName;
 
         // Upload to Supabase Storage
         const { data, error } = await supabase.storage
