@@ -6,14 +6,15 @@ interface NavLink {
     label: string;
     labelSv: string;
     labelDe: string;
+    labelFa: string;
     url: string;
 }
 
 export default function NavLinksEditor({ value, onChange, availablePages = [] }: { value: string, onChange: (val: string) => void, availablePages?: { path: string, description: string }[] }) {
     const defaultLinks = [
-        { label: 'Home', labelSv: 'Hem', labelDe: 'Startseite', url: '/' },
-        { label: 'Menu', labelSv: 'Meny', labelDe: 'Menü', url: '/menu' },
-        { label: 'Offers', labelSv: 'Erbjudanden', labelDe: 'Angebote', url: '/offers' }
+        { label: 'Home', labelSv: 'Hem', labelDe: 'Startseite', labelFa: 'خانه', url: '/' },
+        { label: 'Menu', labelSv: 'Meny', labelDe: 'Menü', labelFa: 'منو', url: '/menu' },
+        { label: 'Offers', labelSv: 'Erbjudanden', labelDe: 'Angebote', labelFa: 'پیشنهادات', url: '/offers' }
     ];
 
     const [links, setLinks] = useState<NavLink[]>(defaultLinks);
@@ -39,7 +40,7 @@ export default function NavLinksEditor({ value, onChange, availablePages = [] }:
     };
 
     const addLink = () => {
-        updateLinks([...links, { label: 'New Link', labelSv: 'Ny länk', labelDe: 'Neuer Link', url: '/' }]);
+        updateLinks([...links, { label: 'New Link', labelSv: 'Ny länk', labelDe: 'Neuer Link', labelFa: 'لینک جدید', url: '/' }]);
     };
 
     const removeLink = (index: number) => {
@@ -108,7 +109,7 @@ export default function NavLinksEditor({ value, onChange, availablePages = [] }:
                         {links.map((link, index) => (
                             <div key={index} style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'minmax(200px, 1fr) minmax(200px, 1fr) minmax(200px, 1fr) minmax(200px, 1.2fr) auto',
+                                gridTemplateColumns: 'repeat(4, minmax(150px, 1fr)) minmax(150px, 1.2fr) auto',
                                 gap: '1rem',
                                 alignItems: 'center',
                                 padding: '1rem',
@@ -142,6 +143,15 @@ export default function NavLinksEditor({ value, onChange, availablePages = [] }:
                                         value={link.labelDe}
                                         onChange={(e) => updateLink(index, 'labelDe', e.target.value)}
                                         style={inputStyle}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>🇮🇷 Persian Label</label>
+                                    <input
+                                        type="text"
+                                        value={link.labelFa || ''}
+                                        onChange={(e) => updateLink(index, 'labelFa', e.target.value)}
+                                        style={{ ...inputStyle, direction: 'rtl' }}
                                     />
                                 </div>
                                 <div>
