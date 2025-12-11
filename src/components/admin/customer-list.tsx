@@ -11,7 +11,7 @@ interface Customer {
     _count: { orders: number };
 }
 
-export default function CustomerList({ customers }: { customers: Customer[] }) {
+export default function CustomerList({ customers }: { customers: any[] }) {
     const [search, setSearch] = useState('');
 
     const filtered = customers.filter(c =>
