@@ -9,30 +9,30 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const { orderId, estimatedMinutes } = await request.json();
+        const body = await request.json();
+        const { orderId, estimatedMinutes } = body;
+
+        console.log("⏱️ Setting estimate for order:", orderId, "Minutes:", estimatedMinutes);
 
         if (!orderId || !estimatedMinutes) {
+            console.error("❌ Missing params:", { orderId, estimatedMinutes });
             return NextResponse.json({ error: 'Missing orderId or estimatedMinutes' }, { status: 400 });
         }
 
-        // Use raw query to update since Prisma client might not have new fields yet
-        await prisma.$executeRaw`
-            UPDATE "Order" 
-            SET "estimatedMinutes" = ${estimatedMinutes}, 
-                "confirmedAt" = ${new Date().toISOString()}, 
-                "status" = 'PREPARING',
-                "updatedAt" = ${new Date().toISOString()}
-            WHERE "id" = ${orderId}
-        `;
-
-        // Fetch and return updated order
-        const order = await prisma.order.findUnique({
-            where: { id: orderId }
+        // Use Prisma update instead of raw query for safety
+        const order = await prisma.order.update({
+            where: { id: orderId },
+            data: {
+                estimatedMinutes: Number(estimatedMinutes),
+                confirmedAt: new Date(),
+                status: 'PREPARING',
+            }
         });
 
+        console.log("✅ Estimate updated for order:", order.id);
         return NextResponse.json(order);
     } catch (error) {
-        console.error('Failed to set estimate:', error);
+        console.error('❌ Failed to set estimate:', error);
         return NextResponse.json({ error: 'Failed to set estimate', details: String(error) }, { status: 500 });
     }
 }
