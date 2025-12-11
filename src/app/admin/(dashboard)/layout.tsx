@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getAdminSession, isSuperAdmin } from '@/lib/admin-auth';
 import AdminLayoutClient from '@/components/admin/admin-layout-client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({
     children,
 }: {
