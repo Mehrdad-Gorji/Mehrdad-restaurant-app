@@ -29,15 +29,19 @@ export async function POST(request: NextRequest) {
 
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // Use random name to avoid ANY encoding issues
-        const ext = file.name.split('.').pop() || 'png';
-        const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+        console.log("File Info:", { name: file.name, type: file.type, size: file.size });
+
+        // Force ASCII filename and PNG extension to debug encoding error
+        // ERROR was: character at index 18 has value 1575
+        const filename = `img_${Date.now()}_${Math.random().toString(36).substring(7)}.png`;
+
+        console.log("Generated Filename:", filename);
 
         // Upload to Supabase Storage
         const { data, error } = await supabase.storage
             .from('images')
             .upload(filename, buffer, {
-                contentType: file.type,
+                contentType: 'image/png', // Force simple content type
                 upsert: false
             });
 
