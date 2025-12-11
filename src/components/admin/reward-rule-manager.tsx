@@ -15,7 +15,7 @@ interface RewardRule {
     isActive: boolean;
 }
 
-export default function RewardRuleManager({ initialRules }: { initialRules: RewardRule[] }) {
+export default function RewardRuleManager({ initialRules }: { initialRules: any[] }) {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRule, setEditingRule] = useState<RewardRule | null>(null);
