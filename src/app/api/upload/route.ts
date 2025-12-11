@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
-    console.log("🚀 Supabase Upload Route Hit!");
+    console.log("🚀 Supabase Upload Route Hit! [DEBUG v2]");
     try {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+        console.log("Env Check:", {
+            hasUrl: !!supabaseUrl,
+            hasKey: !!supabaseKey,
+            urlPrefix: supabaseUrl?.substring(0, 8)
+        });
+
         if (!supabaseUrl || !supabaseKey) {
+            console.error("❌ Missing Supabase Configuration");
             return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
         }
 
