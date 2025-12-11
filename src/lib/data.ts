@@ -73,7 +73,12 @@ export async function getProducts(lang: string, categorySlug?: string) {
             name: pe.extra.translations[0]?.name || 'Extra',
             price: Number(pe.extra.price),
             category: pe.extra.category
-        }))
+        })),
+        // Dietary Flags
+        isSpicy: p.isSpicy,
+        isVegetarian: p.isVegetarian,
+        isGlutenFree: p.isGlutenFree,
+        isVegan: p.isVegan
     }));
 }
 
