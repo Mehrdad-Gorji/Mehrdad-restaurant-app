@@ -119,6 +119,7 @@ export async function PUT(request: Request) {
             vatRateStandard: typeof body.vatRateStandard === 'number' ? body.vatRateStandard : parseFloat(body.vatRateStandard) || 0.19,
             vatRateReduced: typeof body.vatRateReduced === 'number' ? body.vatRateReduced : parseFloat(body.vatRateReduced) || 0.07,
             vatPriceInclusive: body.vatPriceInclusive,
+            predefinedSizes: body.predefinedSizes,
         };
 
         if (settings) {

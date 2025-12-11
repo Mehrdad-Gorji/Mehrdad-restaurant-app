@@ -25,11 +25,17 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     const safeProduct = serializePrisma(product);
     const safeExtras = serializePrisma(extras);
 
+    const settings = await prisma.siteSettings.findFirst();
+    const predefinedSizes = settings?.predefinedSizes
+        ? JSON.parse(settings.predefinedSizes as string)
+        : ['Small', 'Medium', 'Large', 'Extra Large'];
+
     return (
         <div>
             <ProductForm
                 categories={categories}
                 extrasArr={safeExtras}
+                predefinedSizes={predefinedSizes}
                 initialData={safeProduct}
                 isEdit={true}
             />
