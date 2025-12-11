@@ -1,0 +1,105 @@
+{
+    "header": {
+        "home": "Home",
+        "menu": "Menu",
+        "cart": "Cart",
+        "login": "Login",
+        "guide": "User Guide"
+    },
+    "home": {
+        "featured": {
+            "badge": "Featured",
+            "title": "Our Bestsellers",
+            "subtitle": "The most popular choices from our customers",
+            "viewAll": "View All"
+        },
+        "trending": {
+            "badge": "Hot Right Now",
+            "title": "Trending Products",
+            "subtitle": "Our most popular items that customers can't stop ordering"
+        },
+        "offers": {
+            "badge": "Limited Time Deals",
+            "title": "Save Big Today",
+            "subtitle": "Discover our latest offers and enjoy amazing discounts on your favorites.",
+            "copyCode": "Copy Code",
+            "copied": "Copied!",
+            "orderNow": "Order Now",
+            "viewAll": "View All Offers"
+        }
+    },
+    "hero": {
+        "title": "Best Pizza in Town",
+        "subtitle": "Best in Town",
+        "description": "Authentic Italian flavors delivered straight to your door. Hot, fresh, and made with love.",
+        "searchPlaceholder": "Search for pizza, pasta...",
+        "cta": "Order Now"
+    },
+    "footer": {
+        "brandDescription": "The best pizzeria in town serving authentic Italian flavors.",
+        "quickLinks": "Quick Links",
+        "contact": "Contact",
+        "newsletter": "Newsletter",
+        "newsletterDesc": "Subscribe for offers",
+        "subscribe": "Subscribe",
+        "rights": "All rights reserved."
+    },
+    "cart": {
+        "emptyTitle": "Your cart is empty",
+        "emptyMessage": "Add some delicious items to get started!",
+        "backToMenu": "Browse Menu",
+        "title": "Shopping Cart",
+        "items": "items",
+        "item": "item",
+        "clearCart": "Clear Cart",
+        "continueShopping": "Continue Shopping",
+        "summary": "Order Summary",
+        "proceedCheckout": "Proceed to Checkout",
+        "storeClosed": "Store Closed",
+        "net": "Net",
+        "subtotal": "Subtotal",
+        "delivery": "Delivery",
+        "calcAtCheckout": "Calculated at checkout",
+        "total": "Total",
+        "inclVat": "incl. VAT"
+    },
+    "checkout": {
+        "title": "Checkout",
+        "contactInfo": "Contact Information",
+        "fullName": "Full Name",
+        "phone": "Phone Number",
+        "email": "Email (Optional)",
+        "deliveryMethod": "Delivery Method",
+        "delivery": "Delivery",
+        "pickup": "Pickup",
+        "dineIn": "Dine In",
+        "address": "Delivery Address",
+        "street": "Street Address",
+        "zip": "Zip Code",
+        "city": "City",
+        "floor": "Floor (Optional)",
+        "door": "Door Code (Optional)",
+        "orderTime": "Order Time",
+        "asap": "ASAP",
+        "schedule": "Schedule for Later",
+        "selectDateTime": "Select Date & Time",
+        "paymentMethod": "Payment Method",
+        "pay": "Pay",
+        "processing": "Processing...",
+        "subtotal": "Subtotal",
+        "deliveryFee": "Delivery Fee",
+        "discount": "Discount",
+        "driverTip": "Driver Tip",
+        "addTip": "Add a tip for the driver",
+        "customAmount": "Custom amount",
+        "total": "Total",
+        "apply": "Apply",
+        "couponCode": "Coupon Code",
+        "vatBreakdown": "VAT Breakdown (Included)",
+        "foodNet": "Food Net",
+        "foodVat": "Food VAT",
+        "deliveryNet": "Delivery Net",
+        "deliveryVat": "Delivery VAT",
+        "totalVat": "Total VAT"
+    }
+}

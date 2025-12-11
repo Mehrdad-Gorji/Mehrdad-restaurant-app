@@ -1,0 +1,506 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String?
+  name      String?
+  phone     String?
+  role      String    @default("USER") // USER, ADMIN
+  adminRole String?   // SUPER_ADMIN, MANAGER, STAFF, KITCHEN, DELIVERY
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orders    Order[]
+  addresses Address[]
+  wallet    Wallet?
+  coupons   Coupon[]  @relation("CouponUsers")
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  street    String
+  city      String
+  zipCode   String
+  floor     String?
+  doorCode  String?
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id           String                @id @default(uuid())
+  slug         String                @unique
+  image        String?
+  translations CategoryTranslation[]
+  products     Product[]
+}
+
+model CategoryTranslation {
+  id          String   @id @default(uuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  language    String // en, sv, fa, de
+  name        String
+  description String?
+
+  @@unique([categoryId, language])
+}
+
+model Product {
+  id           String               @id @default(uuid())
+  slug         String               @unique
+  price        Decimal
+  image        String?
+  categoryId   String
+  category     Category             @relation(fields: [categoryId], references: [id])
+  translations ProductTranslation[]
+  sizes        ProductSize[]
+  extras       ProductExtra[]
+  orderItems   OrderItem[]
+  comboItems   ComboItem[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  allowedInCoupons Coupon[]         @relation("CouponProducts")
+
+  // Smart Filters
+  isSpicy      Boolean              @default(false)
+  isVegetarian Boolean              @default(false)
+  isGlutenFree Boolean              @default(false)
+  isVegan      Boolean              @default(false)
+
+  // Homepage Display
+  isFeatured   Boolean              @default(false)
+  isTrending   Boolean              @default(false)
+
+  // Ratings (Optimized for performance)
+  averageRating Float               @default(0)
+  reviewCount   Int                 @default(0)
+  reviews       Review[]
+}
+
+model ProductTranslation {
+  id          String  @id @default(uuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  language    String
+  name        String
+  description String?
+
+  @@unique([productId, language])
+}
+
+model ProductSize {
+  id            String                   @id @default(uuid())
+  productId     String
+  product       Product                  @relation(fields: [productId], references: [id])
+  priceModifier Decimal                  @default(0) // Extra cost or total cost overrides might be handled by logic, here usually additive or base
+  translations  ProductSizeTranslation[]
+}
+
+model ProductSizeTranslation {
+  id            String      @id @default(uuid())
+  productSizeId String
+  productSize   ProductSize @relation(fields: [productSizeId], references: [id])
+  language      String
+  name          String // Small, Medium, Large
+
+  @@unique([productSizeId, language])
+}
+
+model Extra {
+  id           String             @id @default(uuid())
+  price        Decimal
+  image        String?
+  categoryId   String?
+  category     ExtraCategory?     @relation(fields: [categoryId], references: [id])
+  translations ExtraTranslation[]
+  products     ProductExtra[]     @relation("AllowedExtras") // Many to Many
+  orderExtras  OrderItemExtra[]
+}
+
+model ExtraTranslation {
+  id       String @id @default(uuid())
+  extraId  String
+  extra    Extra  @relation(fields: [extraId], references: [id])
+  language String
+  name     String
+
+  @@unique([extraId, language])
+}
+
+model ExtraCategory {
+  id           String                     @id @default(uuid())
+  translations ExtraCategoryTranslation[]
+  extras       Extra[]
+}
+
+model ExtraCategoryTranslation {
+  id              String        @id @default(uuid())
+  extraCategoryId String
+  extraCategory   ExtraCategory @relation(fields: [extraCategoryId], references: [id])
+  language        String
+  name            String
+
+  @@unique([extraCategoryId, language])
+}
+
+model ProductExtra {
+  productId String
+  extraId   String
+  product   Product @relation(fields: [productId], references: [id])
+  extra     Extra   @relation("AllowedExtras", fields: [extraId], references: [id])
+
+  @@id([productId, extraId])
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  userId           String?
+  user             User?       @relation(fields: [userId], references: [id])
+  total            Decimal
+  tip              Decimal     @default(0) // Added for Driver Tipping
+  status           String      @default("PENDING") // PENDING, PAID, PREPARING, DELIVERING, COMPLETED, CANCELLED
+  deliveryMethod   String // DELIVERY, PICKUP, DINE_IN
+  deliveryFee      Decimal     @default(0)
+  
+  // Scheduling
+  isScheduled      Boolean     @default(false)
+  requestedTime    DateTime?
+
+  addressJson      String? // Stored snapshot of address
+  estimatedMinutes Int?        // Estimated preparation/delivery time in minutes
+  confirmedAt      DateTime?   // When the order was confirmed by admin
+  completedAt      DateTime?   // When the order was marked COMPLETED
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  items            OrderItem[]
+  payments         Payment[]
+  couponCode       String?
+}
+
+model OrderItem {
+  id        String           @id @default(uuid())
+  orderId   String
+  order     Order            @relation(fields: [orderId], references: [id])
+  productId String?
+  product   Product?         @relation(fields: [productId], references: [id])
+  comboId   String?
+  combo     Combo?           @relation(fields: [comboId], references: [id])
+  quantity  Int
+  price     Decimal // Price at time of order
+  size      String? // Size name (snapshot)
+  extras    OrderItemExtra[]
+}
+
+model OrderItemExtra {
+  id          String    @id @default(uuid())
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+  extraId     String
+  extra       Extra     @relation(fields: [extraId], references: [id])
+  price       Decimal // Price at time of order
+  name        String // Snapshot name
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id])
+  method        String // SWISH, CARD, PAYPAL, ...
+  transactionId String?
+  amount        Decimal
+  status        String // PENDING, COMPLETED, FAILED
+  provider      String? // Swedbank, Paypal...
+  rawResponse   String?
+  createdAt     DateTime @default(now())
+}
+
+model DeliveryZone {
+  id       String  @id @default(uuid())
+  zipStart String
+  zipEnd   String
+  price            Decimal
+  name             String?   // User-friendly name e.g "City Center"
+  minOrder         Decimal?  // Minimum basket value
+  freeDeliveryOver Decimal?  // Free shipping threshold
+  estimatedTime    String?   // e.g "30-45 min"
+}
+
+model Coupon {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  type           String // PERCENTAGE, FIXED
+  value          Decimal
+  startDate      DateTime?
+  endDate        DateTime?
+  minAmount      Decimal?
+  maxDiscount    Decimal?  // Optional cap for percentage coupons
+  applyTo        String?   // 'items' | 'shipping' | 'total'
+  maxUses        Int?
+  usedCount      Int       @default(0)
+  isActive       Boolean   @default(true)
+  maxUsesPerUser Int       @default(1)
+  allowedProducts Product[] @relation("CouponProducts")
+  allowedUsers   User[]    @relation("CouponUsers")
+  design         String    @default("TICKET") // TICKET, GLASS, LUXE, NEON
+}
+
+// Automatic reward rules - assign coupon when user spends threshold amount
+model RewardRule {
+  id              String   @id @default(uuid())
+  name            String   // "VIP Customer Reward"
+  spendThreshold  Decimal  // Amount user must spend (e.g., 1000)
+  periodDays      Int      // Time period in days (e.g., 30 for monthly)
+  discountType    String   // PERCENTAGE or FIXED
+  discountValue   Decimal  // Discount amount
+  maxDiscount     Decimal? // Max discount cap for percentage
+  couponValidDays Int      @default(30) // How long the generated coupon is valid
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
+model Wallet {
+  id           String              @id @default(uuid())
+  userId       String              @unique
+  user         User                @relation(fields: [userId], references: [id])
+  balance      Decimal             @default(0)
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid())
+  walletId    String
+  wallet      Wallet   @relation(fields: [walletId], references: [id])
+  amount      Decimal
+  type        String // CREDIT, DEBIT
+  description String?
+  orderId     String?
+  createdAt   DateTime @default(now())
+}
+
+// Combo / Bundle models
+model Combo {
+  id            String             @id @default(uuid())
+  slug          String             @unique
+  name          String
+  description   String?
+  price         Decimal
+  discountType  String? // PERCENTAGE | FIXED
+  discountValue Decimal? // value for discount
+  image         String?
+  isActive      Boolean            @default(true)
+  items         ComboItem[]
+  orderItems    OrderItem[]
+  translations  ComboTranslation[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model ComboItem {
+  id         String  @id @default(uuid())
+  comboId    String
+  combo      Combo   @relation(fields: [comboId], references: [id])
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+  quantity   Int     @default(1)
+  sizeName   String? // snapshot of chosen size name
+  extrasJson String? // JSON snapshot of chosen extras [{extraId,name,price},...]
+}
+
+model ComboTranslation {
+  id          String  @id @default(uuid())
+  comboId     String
+  combo       Combo   @relation(fields: [comboId], references: [id])
+  language    String
+  name        String
+  description String?
+
+  @@unique([comboId, language])
+}
+
+model SiteSettings {
+  id              String   @id @default(uuid())
+  brandName       String   @default("PizzaShop")
+  logo            String?  // URL to logo image
+  primaryColor    String   @default("#F25F4C")
+  secondaryColor  String   @default("#F5DFBB")
+  backgroundColor String   @default("#FFF9F2")
+  heroTitle       String   @default("Delicious Pizza Delivered")
+  heroDescription String   @default("Authentic Italian flavors delivered straight to your doorstep.")
+  heroImage       String?  // Optional override for hero background
+  heroTitleColor  String   @default("#FFFFFF") // Hero title text color
+  
+  // Typography & Colors
+  textColor       String   @default("#2D3436")
+  textMuted       String   @default("#636E72")
+  
+  // Surfaces
+  surfaceColor    String   @default("#FFFFFF")
+  surfaceAltColor String   @default("#FAEEE5")
+  borderColor     String   @default("#F0DAC9")
+  
+  // Shapes & Effects
+  borderRadius    String   @default("20px")
+  btnRadius       String   @default("50px")
+  glassOpacity    Float    @default(0.75)
+  glassBlur       String   @default("16px")
+
+  // Footer Content
+  footerBrandDesc String   @default("Die beste Pizzeria der Stadt serviert authentische italienische Aromen.")
+  footerAddress   String   @default("Storgatan 1, 123 45 Stockholm, Sweden")
+  footerPhone     String   @default("+46 123 456 789")
+  footerEmail     String   @default("info@pizzashop.com")
+  openingHours    String   @default("Mån-Sön: 11:00 - 23:00")
+  socialFacebook  String   @default("https://facebook.com")
+  socialInstagram String   @default("https://instagram.com")
+  socialTwitter   String   @default("")
+  mapEmbedUrl     String   @default("")
+
+  // Custom Closed Message
+  closedTitle     String   @default("Store is Closed")
+  closedMessage   String   @default("We are currently closed. Please check our opening hours.")
+  closedBtnText   String   @default("Browse Menu Only")
+  closedHoursText String   @default("Operating Hours")
+
+  // Automatic Welcome Coupon
+  welcomeCouponEnabled Boolean @default(false)
+  welcomeCouponValue   Decimal @default(10)
+  welcomeCouponType    String  @default("PERCENTAGE") // PERCENTAGE | FIXED
+  welcomeCouponDays    Int     @default(30)
+
+  // Automatic Loyalty Rewards (2nd & 3rd Order)
+  loyaltySecondOrderEnabled Boolean @default(false)
+  loyaltySecondOrderValue   Decimal @default(10)
+  loyaltySecondOrderType    String  @default("PERCENTAGE")
+  loyaltySecondOrderDays    Int     @default(30)
+  
+  loyaltyThirdOrderEnabled  Boolean @default(false)
+  loyaltyThirdOrderValue    Decimal @default(15)
+  loyaltyThirdOrderType     String  @default("PERCENTAGE")
+  loyaltyThirdOrderDays     Int     @default(30)
+
+  
+  // Structured Schedule (store as JSON string)
+  // { "monday": { "isOpen": true, "open": "11:00", "close": "22:00" }, ... }
+  scheduleEnabled   Boolean @default(false)  // Master toggle for the schedule feature
+  operatingSchedule String @default("{}")
+  
+  // Header Navigation (JSON array of {label, labelSv, labelDe, url})
+  headerNavLinks  String   @default("[{\"label\":\"Home\",\"labelSv\":\"Hem\",\"labelDe\":\"Startseite\",\"url\":\"/\"},{\"label\":\"Menu\",\"labelSv\":\"Meny\",\"labelDe\":\"Menü\",\"url\":\"/menu\"},{\"label\":\"Offers\",\"labelSv\":\"Erbjudanden\",\"labelDe\":\"Angebote\",\"url\":\"/offers\"}]")
+
+  // VAT Settings (EU Tax)
+  vatEnabled       Boolean  @default(true)
+  vatNumber        String   @default("")     // e.g. "DE123456789" or "SE556012345601"
+  vatRateStandard  Float    @default(0.19)   // 19% for Germany, 25% for Sweden
+  vatRateReduced   Float    @default(0.07)   // 7% for Germany, 12% for Sweden (food)
+  vatPriceInclusive Boolean @default(true)   // Prices include VAT (EU standard)
+
+  // Predefined Size Templates
+  predefinedSizes  String   @default("[\"Small\",\"Medium\",\"Large\",\"Extra Large\"]") // JSON array of size names
+
+  updatedAt       DateTime @updatedAt
+}
+
+// Offers
+model Offer {
+  id           String             @id @default(uuid())
+  title        String // Fallback title
+  description  String? // Fallback description
+  image        String?
+  discountCode String? // Optional link to a coupon
+  isActive     Boolean            @default(true)
+  startDate    DateTime?
+  endDate      DateTime?
+  translations OfferTranslation[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model OfferTranslation {
+  id          String @id @default(uuid())
+  offerId     String
+  offer       Offer  @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  language    String
+  title       String
+  description String?
+
+  @@unique([offerId, language])
+}
+
+// About Page Content
+model AboutPage {
+  id            String   @id @default(uuid())
+  
+  // Titles (multi-language)
+  title         String   @default("About Us")
+  titleSv       String   @default("Om Oss")
+  titleDe       String   @default("Über Uns")
+  
+  // Main Content (multi-language)
+  content       String   @default("Welcome to our restaurant! We are passionate about creating delicious food with the finest ingredients.")
+  contentSv     String   @default("Välkommen till vår restaurang! Vi brinner för att skapa utsökt mat med de finaste ingredienserna.")
+  contentDe     String   @default("Willkommen in unserem Restaurant! Wir sind leidenschaftlich daran interessiert, köstliches Essen mit den besten Zutaten zu kreieren.")
+  
+  // Mission Statement (multi-language)
+  mission       String   @default("Our mission is to deliver authentic flavors and exceptional dining experiences.")
+  missionSv     String   @default("Vårt uppdrag är att leverera autentiska smaker och exceptionella matupplevelser.")
+  missionDe     String   @default("Unsere Mission ist es, authentische Aromen und außergewöhnliche Speiseerlebnisse zu liefern.")
+  
+  // Hero Image
+  heroImage     String?
+  
+  // Team Members (JSON array)
+  teamMembers   String   @default("[]")
+  
+  updatedAt     DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  userId    String?  // Link to user if logged in
+  name      String
+  email     String
+  phone     String?
+  subject   String   @default("general")
+  message   String
+  status    String   @default("NEW") // NEW, READ, REPLIED
+  reply     String?
+  repliedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Product Reviews
+model Review {
+  id            String   @id @default(uuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  customerName  String
+  customerEmail String
+  rating        Int      // 1-5 stars
+  comment       String?
+  isApproved    Boolean  @default(false)
+  isVerified    Boolean  @default(false) // Verified purchase
+  helpfulCount  Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([productId])
+  @@index([isApproved])
+}
+
+model Setting {
+  key   String @id
+  value String
+}

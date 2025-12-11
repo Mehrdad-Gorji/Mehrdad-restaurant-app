@@ -1,0 +1,2 @@
+Slug received: "Test%201000", Decoded: "Test 1000"
+Slug received: "Test%201000", Decoded: "Test 1000"

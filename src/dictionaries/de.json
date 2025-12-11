@@ -1,0 +1,105 @@
+{
+    "header": {
+        "home": "Startseite",
+        "menu": "Speisekarte",
+        "cart": "Warenkorb",
+        "login": "Anmelden",
+        "guide": "Benutzerhandbuch"
+    },
+    "home": {
+        "featured": {
+            "badge": "Empfohlen",
+            "title": "Unsere Bestseller",
+            "subtitle": "Die beliebtesten Auswahl unserer Kunden",
+            "viewAll": "Alle Anzeigen"
+        },
+        "trending": {
+            "badge": "Angesagt",
+            "title": "Trendprodukte",
+            "subtitle": "Unsere beliebtesten Artikel, die Kunden nicht aufhören können zu bestellen"
+        },
+        "offers": {
+            "badge": "Befristete Angebote",
+            "title": "Heute Groß Sparen",
+            "subtitle": "Entdecken Sie unsere neuesten Angebote und genießen Sie tolle Rabatte auf Ihre Favoriten.",
+            "copyCode": "Code Kopieren",
+            "copied": "Kopiert!",
+            "orderNow": "Jetzt Bestellen",
+            "viewAll": "Alle Angebote Anzeigen"
+        }
+    },
+    "hero": {
+        "title": "Die beste Pizza der Stadt",
+        "subtitle": "Die Beste der Stadt",
+        "description": "Authentische italienische Aromen direkt vor Ihre Haustür geliefert. Heiß, frisch und mit Liebe gemacht.",
+        "searchPlaceholder": "Suche nach Pizza, Pasta...",
+        "cta": "Jetzt Bestellen"
+    },
+    "footer": {
+        "brandDescription": "Die beste Pizzeria der Stadt serviert authentische italienische Aromen.",
+        "quickLinks": "Schnelllinks",
+        "contact": "Kontakt",
+        "newsletter": "Newsletter",
+        "newsletterDesc": "Abonnieren Sie für Angebote",
+        "subscribe": "Abonnieren",
+        "rights": "Alle Rechte vorbehalten."
+    },
+    "cart": {
+        "emptyTitle": "Ihr Warenkorb ist leer",
+        "emptyMessage": "Fügen Sie einige leckere Artikel hinzu!",
+        "backToMenu": "Menü durchstöbern",
+        "title": "Warenkorb",
+        "items": "Artikel",
+        "item": "Artikel",
+        "clearCart": "Warenkorb leeren",
+        "continueShopping": "Weiter einkaufen",
+        "summary": "Bestellübersicht",
+        "proceedCheckout": "Zur Kasse",
+        "storeClosed": "Geschäft geschlossen",
+        "net": "Netto",
+        "subtotal": "Zwischensumme",
+        "delivery": "Lieferung",
+        "calcAtCheckout": "Wird an der Kasse berechnet",
+        "total": "Gesamt",
+        "inclVat": "inkl. MwSt."
+    },
+    "checkout": {
+        "title": "Kasse",
+        "contactInfo": "Kontaktinformationen",
+        "fullName": "Vollständiger Name",
+        "phone": "Telefonnummer",
+        "email": "E-Mail (Optional)",
+        "deliveryMethod": "Liefermethode",
+        "delivery": "Lieferung",
+        "pickup": "Abholung",
+        "dineIn": "Hier essen",
+        "address": "Lieferadresse",
+        "street": "Straße",
+        "zip": "PLZ",
+        "city": "Stadt",
+        "floor": "Etage (Optional)",
+        "door": "Tür (Optional)",
+        "orderTime": "Bestellzeit",
+        "asap": "Sofort",
+        "schedule": "Später",
+        "selectDateTime": "Datum & Zeit wählen",
+        "paymentMethod": "Zahlungsmethode",
+        "pay": "Bezahlen",
+        "processing": "Verarbeite...",
+        "subtotal": "Zwischensumme",
+        "deliveryFee": "Liefergebühr",
+        "discount": "Rabatt",
+        "driverTip": "Trinkgeld für Fahrer",
+        "addTip": "Trinkgeld hinzufügen",
+        "customAmount": "Benutzerdefinierter Betrag",
+        "total": "Gesamt",
+        "apply": "Anwenden",
+        "couponCode": "Gutscheincode",
+        "vatBreakdown": "MwSt.-Aufschlüsselung (Inklusive)",
+        "foodNet": "Essen Netto",
+        "foodVat": "Essen MwSt.",
+        "deliveryNet": "Lieferung Netto",
+        "deliveryVat": "Lieferung MwSt.",
+        "totalVat": "Gesamt MwSt."
+    }
+}

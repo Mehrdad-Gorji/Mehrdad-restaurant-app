@@ -1,0 +1,180 @@
+[
+  {
+    "id": "7ff2558a-b347-45aa-a8ce-51facba6352f",
+    "name": "Mega Deal",
+    "image": "/api/uploads/1764988383255_2a0e04991f09b2bcb6c1faeb9603f55b_(1).jpg",
+    "items": [
+      {
+        "id": "cb2d86e5-f876-4d6e-9631-b20cb7323839",
+        "comboId": "7ff2558a-b347-45aa-a8ce-51facba6352f",
+        "productId": "1d2b2efc-eaee-4fa4-8d31-07de709d2840",
+        "quantity": 11,
+        "sizeName": "Standard",
+        "extrasJson": "[]",
+        "product": {
+          "id": "1d2b2efc-eaee-4fa4-8d31-07de709d2840",
+          "slug": "Test 1000",
+          "price": "100",
+          "image": "/api/uploads/1764979238312_f4c556b4fe8e2d32e5763f4e1150d1f3.jpg",
+          "categoryId": "2ea3d442-1139-42b3-bb1d-ec5f89b5ae6d",
+          "createdAt": "2025-12-06T00:01:11.635Z",
+          "updatedAt": "2025-12-06T00:03:05.574Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "b304c439-2acf-4961-9348-f555d06507e4",
+    "name": "T100 MG",
+    "image": "/api/uploads/1764988376666_f4c556b4fe8e2d32e5763f4e1150d1f3.jpg",
+    "items": [
+      {
+        "id": "16924e09-4655-416f-a990-c13681c8a275",
+        "comboId": "b304c439-2acf-4961-9348-f555d06507e4",
+        "productId": "9d7feec2-d230-4290-ac09-5e080944673d",
+        "quantity": 1,
+        "sizeName": "Familj",
+        "extrasJson": "[]",
+        "product": {
+          "id": "9d7feec2-d230-4290-ac09-5e080944673d",
+          "slug": "margarita",
+          "price": "95",
+          "image": "/api/uploads/1764976383290_92636f689549654286dec68bb06ed255.jpg",
+          "categoryId": "5c4e6962-50be-488c-9d3b-1d074816b91d",
+          "createdAt": "2025-12-05T21:19:41.399Z",
+          "updatedAt": "2025-12-05T23:53:21.016Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "a717af78-2bcd-4e46-b672-0a462a8c3ea2",
+    "name": "API Test Combo",
+    "image": "/api/uploads/1764987774547_92636f689549654286dec68bb06ed255.jpg",
+    "items": [
+      {
+        "id": "213781bc-4fd2-4d40-ab51-12107202baf1",
+        "comboId": "a717af78-2bcd-4e46-b672-0a462a8c3ea2",
+        "productId": "9d7feec2-d230-4290-ac09-5e080944673d",
+        "quantity": 1,
+        "sizeName": "Standard",
+        "extrasJson": "[]",
+        "product": {
+          "id": "9d7feec2-d230-4290-ac09-5e080944673d",
+          "slug": "margarita",
+          "price": "95",
+          "image": "/api/uploads/1764976383290_92636f689549654286dec68bb06ed255.jpg",
+          "categoryId": "5c4e6962-50be-488c-9d3b-1d074816b91d",
+          "createdAt": "2025-12-05T21:19:41.399Z",
+          "updatedAt": "2025-12-05T23:53:21.016Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c6be6083-be37-4f01-bcf1-1284d392a267",
+    "name": "fgfghfg",
+    "image": "/api/uploads/1765114785764_2a0e04991f09b2bcb6c1faeb9603f55b_(1).jpg",
+    "items": [
+      {
+        "id": "e09a0145-ef37-4fee-862b-5c9d7c359933",
+        "comboId": "c6be6083-be37-4f01-bcf1-1284d392a267",
+        "productId": "b8be3f20-6e76-48c3-8017-95188ae6a84a",
+        "quantity": 1,
+        "sizeName": "Standard",
+        "extrasJson": "[]",
+        "product": {
+          "id": "b8be3f20-6e76-48c3-8017-95188ae6a84a",
+          "slug": "vesuvio",
+          "price": "105",
+          "image": "/api/uploads/1764977397999_image_processing20210628-27673-19usi2b.jpg",
+          "categoryId": "5c4e6962-50be-488c-9d3b-1d074816b91d",
+          "createdAt": "2025-12-05T21:19:41.412Z",
+          "updatedAt": "2025-12-05T23:30:21.380Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "79e7f73f-9f14-4d02-abcf-d3d1d181c279",
+    "name": "Go 100",
+    "image": "/api/uploads/1765128893231_image_processing20210628-27673-19usi2b.jpg",
+    "items": [
+      {
+        "id": "81093cbc-1fd1-431b-bad7-9288bffb5db9",
+        "comboId": "79e7f73f-9f14-4d02-abcf-d3d1d181c279",
+        "productId": "d9624d6d-5a47-4153-ab63-e1479ba04bef",
+        "quantity": 2,
+        "sizeName": "",
+        "extrasJson": "[]",
+        "product": {
+          "id": "d9624d6d-5a47-4153-ab63-e1479ba04bef",
+          "slug": "cola-test",
+          "price": "20",
+          "image": "https://placehold.co/400x400/black/white.png?text=Cola",
+          "categoryId": "17697a43-b574-4128-b13d-87814fd73e07",
+          "createdAt": "2025-12-07T17:30:48.193Z",
+          "updatedAt": "2025-12-07T17:45:29.699Z"
+        }
+      },
+      {
+        "id": "7912bb10-24f4-49fd-8f93-872472fc3b8e",
+        "comboId": "79e7f73f-9f14-4d02-abcf-d3d1d181c279",
+        "productId": "511db0a3-340b-47cd-93d7-3e2fbe8fd7bd",
+        "quantity": 1,
+        "sizeName": "",
+        "extrasJson": "[]",
+        "product": {
+          "id": "511db0a3-340b-47cd-93d7-3e2fbe8fd7bd",
+          "slug": "pizza-margherita-test",
+          "price": "150",
+          "image": "https://placehold.co/400x400/orange/white?text=Pizza",
+          "categoryId": "17697a43-b574-4128-b13d-87814fd73e07",
+          "createdAt": "2025-12-07T17:30:48.182Z",
+          "updatedAt": "2025-12-07T17:45:29.688Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "cd515d54-5d9b-4e68-9dc2-4a7a9d81b0fb",
+    "name": "Collage Combo",
+    "image": "",
+    "items": [
+      {
+        "id": "e4b540db-8fc3-43bd-89dd-3471aee3ce69",
+        "comboId": "cd515d54-5d9b-4e68-9dc2-4a7a9d81b0fb",
+        "productId": "d9624d6d-5a47-4153-ab63-e1479ba04bef",
+        "quantity": 1,
+        "sizeName": "",
+        "extrasJson": "[]",
+        "product": {
+          "id": "d9624d6d-5a47-4153-ab63-e1479ba04bef",
+          "slug": "cola-test",
+          "price": "20",
+          "image": "https://placehold.co/400x400/black/white.png?text=Cola",
+          "categoryId": "17697a43-b574-4128-b13d-87814fd73e07",
+          "createdAt": "2025-12-07T17:30:48.193Z",
+          "updatedAt": "2025-12-07T17:45:29.699Z"
+        }
+      },
+      {
+        "id": "442d5f44-d165-4547-abdf-171583515eeb",
+        "comboId": "cd515d54-5d9b-4e68-9dc2-4a7a9d81b0fb",
+        "productId": "511db0a3-340b-47cd-93d7-3e2fbe8fd7bd",
+        "quantity": 1,
+        "sizeName": "",
+        "extrasJson": "[]",
+        "product": {
+          "id": "511db0a3-340b-47cd-93d7-3e2fbe8fd7bd",
+          "slug": "pizza-margherita-test",
+          "price": "150",
+          "image": "https://placehold.co/400x400/orange/white?text=Pizza",
+          "categoryId": "17697a43-b574-4128-b13d-87814fd73e07",
+          "createdAt": "2025-12-07T17:30:48.182Z",
+          "updatedAt": "2025-12-07T17:45:29.688Z"
+        }
+      }
+    ]
+  }
+]

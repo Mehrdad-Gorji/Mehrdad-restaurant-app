@@ -1,0 +1,105 @@
+{
+    "header": {
+        "home": "Hem",
+        "menu": "Meny",
+        "cart": "Varukorg",
+        "login": "Logga in",
+        "guide": "Användarguide"
+    },
+    "home": {
+        "featured": {
+            "badge": "Utvalda",
+            "title": "Våra Bästsäljare",
+            "subtitle": "De mest populära valen från våra kunder",
+            "viewAll": "Se Alla"
+        },
+        "trending": {
+            "badge": "Hett Just Nu",
+            "title": "Populära Produkter",
+            "subtitle": "Våra mest populära varor som kunderna älskar"
+        },
+        "offers": {
+            "badge": "Tidsbegränsade Erbjudanden",
+            "title": "Spara Stort Idag",
+            "subtitle": "Upptäck våra senaste erbjudanden och njut av fantastiska rabatter på dina favoriter.",
+            "copyCode": "Kopiera Kod",
+            "copied": "Kopierad!",
+            "orderNow": "Beställ Nu",
+            "viewAll": "Se Alla Erbjudanden"
+        }
+    },
+    "hero": {
+        "title": "Bästa Pizzan i Stan",
+        "subtitle": "Bäst i Stan",
+        "description": "Autentiska italienska smaker levererade direkt till din dörr. Varmt, färskt och gjort med kärlek.",
+        "searchPlaceholder": "Sök efter pizza, pasta...",
+        "cta": "Beställ Nu"
+    },
+    "footer": {
+        "brandDescription": "Den bästa pizzerian i staden som serverar autentiska italienska smaker.",
+        "quickLinks": "Snabblänkar",
+        "contact": "Kontakt",
+        "newsletter": "Nyhetsbrev",
+        "newsletterDesc": "Prenumerera för erbjudanden",
+        "subscribe": "Prenumerera",
+        "rights": "Alla rättigheter förbehållna."
+    },
+    "cart": {
+        "emptyTitle": "Din varukorg är tom",
+        "emptyMessage": "Lägg till några läckra varor för att komma igång!",
+        "backToMenu": "Bläddra i menyn",
+        "title": "Varukorg",
+        "items": "varor",
+        "item": "vara",
+        "clearCart": "Töm varukorg",
+        "continueShopping": "Fortsätt handla",
+        "summary": "Beställningssammanfattning",
+        "proceedCheckout": "Gå till kassan",
+        "storeClosed": "Butiken stängd",
+        "net": "Netto",
+        "subtotal": "Delsumma",
+        "delivery": "Leverans",
+        "calcAtCheckout": "Beräknas i kassan",
+        "total": "Totalt",
+        "inclVat": "inkl. moms"
+    },
+    "checkout": {
+        "title": "Kassa",
+        "contactInfo": "Kontaktinformation",
+        "fullName": "Fullständigt namn",
+        "phone": "Telefonnummer",
+        "email": "E-post (Valfritt)",
+        "deliveryMethod": "Leveransmetod",
+        "delivery": "Leverans",
+        "pickup": "Avhämtning",
+        "dineIn": "Äta här",
+        "address": "Leveransadress",
+        "street": "Gatuadress",
+        "zip": "Postnummer",
+        "city": "Stad",
+        "floor": "Våning (Valfritt)",
+        "door": "Portkod (Valfritt)",
+        "orderTime": "Beställningstid",
+        "asap": "Snarast",
+        "schedule": "Schemalägg",
+        "selectDateTime": "Välj datum & tid",
+        "paymentMethod": "Betalningsmetod",
+        "pay": "Betala",
+        "processing": "Bearbetar...",
+        "subtotal": "Delsumma",
+        "deliveryFee": "Leveransavgift",
+        "discount": "Rabatt",
+        "driverTip": "Dricks till förare",
+        "addTip": "Lägg till dricks",
+        "customAmount": "Valfritt belopp",
+        "total": "Totalt",
+        "apply": "Använd",
+        "couponCode": "Rabattkod",
+        "vatBreakdown": "Momsöversikt (Ingår)",
+        "foodNet": "Mat Netto",
+        "foodVat": "Mat Moms",
+        "deliveryNet": "Leverans Netto",
+        "deliveryVat": "Leverans Moms",
+        "totalVat": "Total Moms"
+    }
+}
