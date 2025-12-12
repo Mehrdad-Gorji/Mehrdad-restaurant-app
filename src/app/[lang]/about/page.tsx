@@ -16,9 +16,11 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
     const { lang } = await params;
     const about = await getAboutContent();
 
-    const title = lang === 'sv' ? about?.titleSv : lang === 'de' ? about?.titleDe : about?.title || 'About Us';
-    const content = lang === 'sv' ? about?.contentSv : lang === 'de' ? about?.contentDe : about?.content || '';
-    const mission = lang === 'sv' ? about?.missionSv : lang === 'de' ? about?.missionDe : about?.mission || '';
+    const title = lang === 'sv' ? about?.titleSv : lang === 'de' ? about?.titleDe : lang === 'fa' ? about?.titleFa : about?.title || 'About Us';
+    const content = lang === 'sv' ? about?.contentSv : lang === 'de' ? about?.contentDe : lang === 'fa' ? about?.contentFa : about?.content || '';
+    const mission = lang === 'sv' ? about?.missionSv : lang === 'de' ? about?.missionDe : lang === 'fa' ? about?.missionFa : about?.mission || '';
+
+    const isRTL = lang === 'fa';
 
     let teamMembers: { name: string; role: string; image: string }[] = [];
     try {
@@ -32,7 +34,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
         : null;
 
     return (
-        <div style={{ minHeight: '100vh', background: '#0a0a0a' }}>
+        <div style={{ minHeight: '100vh', background: '#0a0a0a', direction: isRTL ? 'rtl' : 'ltr' }}>
             {/* Hero Section */}
             <section style={{
                 position: 'relative',
@@ -86,7 +88,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
                         fontWeight: '600',
                         marginBottom: '1.5rem'
                     }}>
-                        {lang === 'sv' ? 'Vår Historia' : lang === 'de' ? 'Unsere Geschichte' : 'Our Story'}
+                        {lang === 'sv' ? 'Vår Historia' : lang === 'de' ? 'Unsere Geschichte' : lang === 'fa' ? 'داستان ما' : 'Our Story'}
                     </span>
                     <h1 style={{
                         fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
@@ -122,7 +124,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
                                 color: '#a855f7',
                                 marginBottom: '1rem'
                             }}>
-                                {lang === 'sv' ? 'Vårt Uppdrag' : lang === 'de' ? 'Unsere Mission' : 'Our Mission'}
+                                {lang === 'sv' ? 'Vårt Uppdrag' : lang === 'de' ? 'Unsere Mission' : lang === 'fa' ? 'ماموریت ما' : 'Our Mission'}
                             </h2>
                             <p style={{
                                 fontSize: '1.25rem',
@@ -168,7 +170,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
                             textAlign: 'center',
                             marginBottom: '3rem'
                         }}>
-                            {lang === 'sv' ? 'Vårt Team' : lang === 'de' ? 'Unser Team' : 'Our Team'}
+                            {lang === 'sv' ? 'Vårt Team' : lang === 'de' ? 'Unser Team' : lang === 'fa' ? 'تیم ما' : 'Our Team'}
                         </h2>
                         <div style={{
                             display: 'grid',
@@ -233,7 +235,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
                     color: '#fff',
                     marginBottom: '1.5rem'
                 }}>
-                    {lang === 'sv' ? 'Redo att beställa?' : lang === 'de' ? 'Bereit zu bestellen?' : 'Ready to Order?'}
+                    {lang === 'sv' ? 'Redo att beställa?' : lang === 'de' ? 'Bereit zu bestellen?' : lang === 'fa' ? 'آماده سفارش هستید؟' : 'Ready to Order?'}
                 </h2>
                 <Link href={`/${lang}/menu`} style={{
                     display: 'inline-flex',
@@ -249,7 +251,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: Lo
                     boxShadow: '0 10px 30px rgba(255, 107, 107, 0.3)',
                     transition: 'all 0.3s ease'
                 }}>
-                    {lang === 'sv' ? 'Se Menyn' : lang === 'de' ? 'Menü Ansehen' : 'View Menu'} →
+                    {lang === 'sv' ? 'Se Menyn' : lang === 'de' ? 'Menü Ansehen' : lang === 'fa' ? 'مشاهده منو' : 'View Menu'} →
                 </Link>
             </section>
         </div>
