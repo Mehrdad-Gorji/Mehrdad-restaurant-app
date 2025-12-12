@@ -13,7 +13,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, slug, description, price, discountType, discountValue, isActive, items, image } = body;
+    const { name, slug, description, price, discountType, discountValue, isActive, items, image, translations } = body;
 
     // Validate required fields
     if (!name || !slug || price === undefined) {
@@ -37,9 +37,16 @@ export async function POST(req: Request) {
             sizeName: it.sizeName,
             extrasJson: it.extrasJson ? JSON.stringify(it.extrasJson) : null,
           }))
+        },
+        translations: {
+          create: (translations || []).map((t: any) => ({
+            language: t.language,
+            name: t.name,
+            description: t.description || null
+          }))
         }
       },
-      include: { items: true }
+      include: { items: true, translations: true }
     });
 
     return NextResponse.json(serializePrisma(created));

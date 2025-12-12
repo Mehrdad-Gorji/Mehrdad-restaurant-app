@@ -7,7 +7,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const combo = await prisma.combo.findUnique({
         where: { id },
-        include: { items: { include: { product: { include: { translations: true } } } } }
+        include: {
+            items: { include: { product: { include: { translations: true } } } },
+            translations: true
+        }
     });
 
     if (!combo) return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -19,14 +22,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     try {
         const body = await request.json();
-        const { name, slug, description, price, discountType, discountValue, isActive, items, image } = body;
+        const { name, slug, description, price, discountType, discountValue, isActive, items, image, translations } = body;
 
         // Validation
         if (!name || !slug || price === undefined) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // Transaction to update basic info and items
+        // Transaction to update basic info, items and translations
         const updated = await prisma.$transaction(async (tx) => {
             // 1. Update Combo Core
             const combo = await tx.combo.update({
@@ -43,7 +46,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
                 }
             });
 
-            // 2. Sync Items (Delete all and recreate is simplest for now, though slightly inefficient)
+            // 2. Sync Items (Delete all and recreate)
             await tx.comboItem.deleteMany({ where: { comboId: id } });
 
             if (items && items.length > 0) {
@@ -54,6 +57,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
                         quantity: it.quantity ?? 1,
                         sizeName: it.sizeName,
                         extrasJson: it.extrasJson ? JSON.stringify(it.extrasJson) : null
+                    }))
+                });
+            }
+
+            // 3. Sync Translations (Delete all and recreate)
+            await tx.comboTranslation.deleteMany({ where: { comboId: id } });
+
+            if (translations && translations.length > 0) {
+                await tx.comboTranslation.createMany({
+                    data: translations.map((t: any) => ({
+                        comboId: id,
+                        language: t.language,
+                        name: t.name,
+                        description: t.description || null
                     }))
                 });
             }

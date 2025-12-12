@@ -10,8 +10,14 @@ export default function ComboForm({ products, initialData, isEdit = false }: { p
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(initialData?.name || '');
+    const [nameSv, setNameSv] = useState(initialData?.translations?.find((t: any) => t.language === 'sv')?.name || '');
+    const [nameDe, setNameDe] = useState(initialData?.translations?.find((t: any) => t.language === 'de')?.name || '');
+    const [nameFa, setNameFa] = useState(initialData?.translations?.find((t: any) => t.language === 'fa')?.name || '');
     const [slug, setSlug] = useState(initialData?.slug || '');
     const [description, setDescription] = useState(initialData?.description || '');
+    const [descriptionSv, setDescriptionSv] = useState(initialData?.translations?.find((t: any) => t.language === 'sv')?.description || '');
+    const [descriptionDe, setDescriptionDe] = useState(initialData?.translations?.find((t: any) => t.language === 'de')?.description || '');
+    const [descriptionFa, setDescriptionFa] = useState(initialData?.translations?.find((t: any) => t.language === 'fa')?.description || '');
     const [price, setPrice] = useState(initialData?.price || 0);
     const [discountType, setDiscountType] = useState(initialData?.discountType || 'PERCENTAGE');
     const [discountValue, setDiscountValue] = useState(initialData?.discountValue || 0);
@@ -98,7 +104,14 @@ export default function ComboForm({ products, initialData, isEdit = false }: { p
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        const payload = { name, slug, description, price, discountType, discountValue, isActive, items, image };
+
+        const translations = [
+            { language: 'sv', name: nameSv, description: descriptionSv },
+            { language: 'de', name: nameDe, description: descriptionDe },
+            { language: 'fa', name: nameFa, description: descriptionFa }
+        ].filter(t => t.name); // Only include translations with a name
+
+        const payload = { name, slug, description, price, discountType, discountValue, isActive, items, image, translations };
 
         const url = isEdit ? `/api/admin/combos/${initialData.id}` : '/api/admin/combos';
         const method = isEdit ? 'PUT' : 'POST';
@@ -164,7 +177,7 @@ export default function ComboForm({ products, initialData, isEdit = false }: { p
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                     <div>
-                        <label style={labelStyle}>Name</label>
+                        <label style={labelStyle}>Name (English) *</label>
                         <input required style={inputStyle} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Family Feast" />
                     </div>
                     <div>
@@ -174,8 +187,67 @@ export default function ComboForm({ products, initialData, isEdit = false }: { p
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label style={labelStyle}>Description</label>
-                    <textarea style={{ ...inputStyle, resize: 'vertical' }} value={description} onChange={e => setDescription(e.target.value)} rows={3} placeholder="Describe what's included..." />
+                    <label style={labelStyle}>Description (English)</label>
+                    <textarea style={{ ...inputStyle, resize: 'vertical' }} value={description} onChange={e => setDescription(e.target.value)} rows={2} placeholder="Describe what's included..." />
+                </div>
+
+                {/* Translations Section */}
+                <div style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    padding: '1.5rem',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    marginBottom: '1.5rem'
+                }}>
+                    <h4 style={{ margin: '0 0 1rem 0', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        🌍 Translations
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                        {/* Swedish */}
+                        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>
+                                <span>🇸🇪</span> <span style={{ fontWeight: '600' }}>Svenska</span>
+                            </div>
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>Namn</label>
+                                <input style={{ ...inputStyle, padding: '0.6rem' }} value={nameSv} onChange={e => setNameSv(e.target.value)} placeholder="Namn på svenska" />
+                            </div>
+                            <div>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>Beskrivning</label>
+                                <textarea style={{ ...inputStyle, padding: '0.6rem', resize: 'vertical' }} value={descriptionSv} onChange={e => setDescriptionSv(e.target.value)} rows={2} placeholder="Beskrivning på svenska" />
+                            </div>
+                        </div>
+
+                        {/* German */}
+                        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>
+                                <span>🇩🇪</span> <span style={{ fontWeight: '600' }}>Deutsch</span>
+                            </div>
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>Name</label>
+                                <input style={{ ...inputStyle, padding: '0.6rem' }} value={nameDe} onChange={e => setNameDe(e.target.value)} placeholder="Name auf Deutsch" />
+                            </div>
+                            <div>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>Beschreibung</label>
+                                <textarea style={{ ...inputStyle, padding: '0.6rem', resize: 'vertical' }} value={descriptionDe} onChange={e => setDescriptionDe(e.target.value)} rows={2} placeholder="Beschreibung auf Deutsch" />
+                            </div>
+                        </div>
+
+                        {/* Farsi */}
+                        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.7)' }}>
+                                <span>🇮🇷</span> <span style={{ fontWeight: '600' }}>فارسی</span>
+                            </div>
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>نام</label>
+                                <input style={{ ...inputStyle, padding: '0.6rem', direction: 'rtl' }} value={nameFa} onChange={e => setNameFa(e.target.value)} placeholder="نام به فارسی" />
+                            </div>
+                            <div>
+                                <label style={{ ...labelStyle, fontSize: '0.8rem' }}>توضیحات</label>
+                                <textarea style={{ ...inputStyle, padding: '0.6rem', resize: 'vertical', direction: 'rtl' }} value={descriptionFa} onChange={e => setDescriptionFa(e.target.value)} rows={2} placeholder="توضیحات به فارسی" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>

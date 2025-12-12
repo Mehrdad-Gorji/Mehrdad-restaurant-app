@@ -5,6 +5,12 @@ import { useCart } from '@/context/cart-context';
 import ComboSmartImage from './combo-smart-image';
 import ComboDetailModal from './combo-detail-modal';
 
+interface ComboTranslation {
+    language: string;
+    name: string;
+    description?: string | null;
+}
+
 interface Props {
     combo: {
         id: string;
@@ -16,12 +22,18 @@ interface Props {
         discountValue?: number | null;
         image?: string | null;
         items: any[];
+        translations?: ComboTranslation[];
     };
     lang: string;
 }
 
 export default function ComboCard({ combo, lang }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Get translated name/description based on language
+    const translation = combo.translations?.find(t => t.language === lang);
+    const displayName = translation?.name || combo.name;
+    const displayDescription = translation?.description || combo.description;
 
     // Calculate final price for display
     let finalPrice = combo.price;
@@ -95,7 +107,7 @@ export default function ComboCard({ combo, lang }: Props) {
                                 fontWeight: '700',
                                 cursor: 'pointer'
                             }}
-                        >{combo.name}</h3>
+                        >{displayName}</h3>
                         <p style={{
                             fontSize: '0.95rem',
                             color: 'rgba(255,255,255,0.5)',
@@ -104,7 +116,7 @@ export default function ComboCard({ combo, lang }: Props) {
                             maxHeight: 'calc(1.5em * 4)',
                             overflowY: 'auto'
                         }}>
-                            {combo.description || 'Special bundle offer!'}
+                            {displayDescription || (lang === 'fa' ? 'پیشنهاد ویژه بسته!' : lang === 'sv' ? 'Specialpaket!' : lang === 'de' ? 'Sonderangebot!' : 'Special bundle offer!')}
                         </p>
 
                         <ul style={{
