@@ -10,7 +10,10 @@ export async function POST(request: NextRequest) {
 
         const arrayBuffer = await file.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        const rows: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+
+        // Find data sheet (skip Guide sheet)
+        const dataSheetName = workbook.SheetNames.find(s => s !== 'Guide') || workbook.SheetNames[0];
+        const rows: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[dataSheetName]);
 
         let imported = 0;
         const languages = ['en', 'sv', 'fa', 'de'];

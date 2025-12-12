@@ -15,12 +15,9 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await file.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-        // Get first sheet
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        // Parse to JSON
-        const rows: any[] = XLSX.utils.sheet_to_json(worksheet);
+        // Find data sheet (skip Guide sheet)
+        const dataSheetName = workbook.SheetNames.find(s => s !== 'Guide') || workbook.SheetNames[0];
+        const rows: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[dataSheetName]);
 
         if (rows.length === 0) {
             return NextResponse.json({ error: 'Empty file' }, { status: 400 });
