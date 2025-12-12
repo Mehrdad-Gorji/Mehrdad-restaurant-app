@@ -47,11 +47,28 @@ export async function POST(request: NextRequest) {
         const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
         const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
 
+        // Determine correct content type
+        let contentType = file.type;
+        if (!contentType || contentType === 'application/octet-stream') {
+            // Fallback based on extension
+            const mimeTypes: Record<string, string> = {
+                'png': 'image/png',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'webp': 'image/webp',
+                'svg': 'image/svg+xml'
+            };
+            contentType = mimeTypes[ext] || 'image/png';
+        }
+
+        console.log('📤 Uploading file:', { filename, contentType, size: buffer.length });
+
         // Upload to Supabase Storage
         const { data, error } = await supabase.storage
             .from('images')
             .upload(filename, buffer, {
-                contentType: file.type || 'image/png',
+                contentType: contentType,
                 upsert: false
             });
 

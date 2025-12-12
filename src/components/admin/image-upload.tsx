@@ -12,6 +12,7 @@ export default function ImageUpload({ value, onChange }: Props) {
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+        console.log('📁 ImageUpload - File selected:', file?.name, file?.type, file?.size);
         if (!file) return;
 
         setUploading(true);
@@ -19,18 +20,26 @@ export default function ImageUpload({ value, onChange }: Props) {
         formData.append('file', file);
 
         try {
+            console.log('📤 ImageUpload - Starting upload...');
             const res = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData
             });
 
-            if (!res.ok) throw new Error('Upload failed');
+            console.log('📥 ImageUpload - Response status:', res.status);
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                console.error('❌ ImageUpload - Upload failed:', errorData);
+                throw new Error(errorData.error || 'Upload failed');
+            }
 
             const data = await res.json();
+            console.log('✅ ImageUpload - Success:', data.url);
             onChange(data.url);
         } catch (error) {
-            console.error(error);
-            alert('Failed to upload image');
+            console.error('❌ ImageUpload - Error:', error);
+            alert('Failed to upload image: ' + (error as Error).message);
         } finally {
             setUploading(false);
         }
