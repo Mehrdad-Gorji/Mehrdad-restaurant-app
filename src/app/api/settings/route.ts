@@ -120,6 +120,15 @@ export async function PUT(request: Request) {
             vatRateReduced: typeof body.vatRateReduced === 'number' ? body.vatRateReduced : parseFloat(body.vatRateReduced) || 0.07,
             vatPriceInclusive: body.vatPriceInclusive,
             predefinedSizes: body.predefinedSizes,
+
+            // Payment Gateway Settings
+            swedbankPayEnabled: body.swedbankPayEnabled,
+            swedbankPayMode: body.swedbankPayMode,
+            swedbankPayPayeeId: body.swedbankPayPayeeId,
+            swedbankPayAccessToken: body.swedbankPayAccessToken,
+            swedbankPayPayeeName: body.swedbankPayPayeeName,
+            swishEnabled: body.swishEnabled,
+            cardPaymentEnabled: body.cardPaymentEnabled,
         };
 
         if (settings) {

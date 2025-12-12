@@ -410,6 +410,21 @@ model SiteSettings {
   // Predefined Size Templates
   predefinedSizes  String   @default("[\"Small\",\"Medium\",\"Large\",\"Extra Large\"]") // JSON array of size names
 
+  // ========== PAYMENT GATEWAY SETTINGS ==========
+  
+  // Swedbank Pay
+  swedbankPayEnabled     Boolean  @default(false)
+  swedbankPayMode        String   @default("test")  // "test" or "production"
+  swedbankPayPayeeId     String   @default("")
+  swedbankPayAccessToken String   @default("")
+  swedbankPayPayeeName   String   @default("")
+  
+  // Swish (via Swedbank Pay)
+  swishEnabled           Boolean  @default(false)
+  
+  // Card Payments (via Swedbank Pay)
+  cardPaymentEnabled     Boolean  @default(false)
+
   updatedAt       DateTime @updatedAt
 }
 
