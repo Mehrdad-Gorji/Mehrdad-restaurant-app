@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import ExtrasManager from '@/components/admin/extras-manager';
 import { serializePrisma } from '@/lib/serialize';
+import EntityImportExport from '@/components/admin/entity-import-export';
 
 export default async function ExtrasPage() {
     const extras = await prisma.extra.findMany({
@@ -22,20 +23,35 @@ export default async function ExtrasPage() {
     return (
         <div style={{ color: '#fff' }}>
             {/* Header */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <h1 style={{
-                    fontSize: '2rem',
-                    fontWeight: '800',
-                    margin: '0',
-                    background: 'linear-gradient(135deg, #fff, #a5b4fc)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                }}>
-                    🧀 Extras
-                </h1>
-                <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
-                    Manage add-ons and toppings
-                </p>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1.5rem',
+                flexWrap: 'wrap',
+                gap: '1rem'
+            }}>
+                <div>
+                    <h1 style={{
+                        fontSize: '2rem',
+                        fontWeight: '800',
+                        margin: '0',
+                        background: 'linear-gradient(135deg, #fff, #a5b4fc)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                    }}>
+                        🧀 Extras
+                    </h1>
+                    <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
+                        Manage add-ons and toppings
+                    </p>
+                </div>
+                <EntityImportExport
+                    entityName="extras"
+                    exportUrl="/api/admin/extras/export"
+                    importUrl="/api/admin/extras/import"
+                    templateUrl="/api/admin/extras/template"
+                />
             </div>
 
             {/* Stats */}
