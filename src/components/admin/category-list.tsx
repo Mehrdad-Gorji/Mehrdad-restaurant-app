@@ -119,13 +119,38 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                             /* Edit Mode */
                             <div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
-                                    {/* Image Upload */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                        <div style={{ width: '80px', flexShrink: 0 }}>
-                                            <ImageUpload value={editImage} onChange={setEditImage} />
+                                    {/* Image & Slug Header */}
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '1rem',
+                                        paddingBottom: '1rem',
+                                        borderBottom: '1px solid rgba(255,255,255,0.1)'
+                                    }}>
+                                        <div style={{
+                                            width: '60px',
+                                            height: '60px',
+                                            flexShrink: 0,
+                                            borderRadius: '10px',
+                                            background: editImage
+                                                ? `url(${editImage}) center/cover`
+                                                : 'rgba(139, 92, 246, 0.2)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            border: '2px solid rgba(255,255,255,0.1)'
+                                        }}>
+                                            {!editImage && <span style={{ fontSize: '1.5rem' }}>🍕</span>}
                                         </div>
-                                        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                                            <strong style={{ color: '#fff' }}>{cat.slug}</strong>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: '600', color: '#fff', marginBottom: '0.3rem' }}>{cat.slug}</div>
+                                            <input
+                                                type="text"
+                                                placeholder="Image URL..."
+                                                value={editImage}
+                                                onChange={e => setEditImage(e.target.value)}
+                                                style={{ ...inputStyle, fontSize: '0.75rem', padding: '0.4rem' }}
+                                            />
                                         </div>
                                     </div>
 
