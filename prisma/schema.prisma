@@ -177,6 +177,7 @@ model Order {
   // Scheduling
   isScheduled      Boolean     @default(false)
   requestedTime    DateTime?
+  isPrinted        Boolean     @default(false)
 
   addressJson      String? // Stored snapshot of address
   estimatedMinutes Int?        // Estimated preparation/delivery time in minutes

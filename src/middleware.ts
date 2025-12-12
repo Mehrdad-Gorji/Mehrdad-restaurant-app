@@ -12,6 +12,12 @@ function getLocale(request: NextRequest): string | undefined {
 
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
+    const searchParams = request.nextUrl.searchParams;
+
+    // Intercept Auto Printer requests
+    if (searchParams.has('action') && searchParams.get('action')?.startsWith('erfan_autoprinter')) {
+        return NextResponse.rewrite(new URL('/api/printer', request.url) + request.nextUrl.search);
+    }
 
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = i18n.locales.every(
