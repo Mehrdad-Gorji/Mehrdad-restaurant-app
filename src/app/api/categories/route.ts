@@ -20,6 +20,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing slug or English name' }, { status: 400 });
         }
 
+        // Check for duplicate slug
+        const existing = await prisma.category.findUnique({ where: { slug } });
+        if (existing) {
+            return NextResponse.json({ error: `A category with slug "${slug}" already exists` }, { status: 400 });
+        }
+
         const category = await prisma.category.create({
             data: {
                 slug,
@@ -36,8 +42,11 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json(category);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Create category error:', error);
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: 'A category with this slug already exists' }, { status: 400 });
+        }
         return NextResponse.json({ error: 'Failed to create category' }, { status: 500 });
     }
 }

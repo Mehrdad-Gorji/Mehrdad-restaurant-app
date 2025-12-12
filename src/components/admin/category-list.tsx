@@ -12,8 +12,17 @@ export default function CategoryList({ initialCategories }: { initialCategories:
 
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this category?')) return;
-        await fetch(`/api/categories?id=${id}`, { method: 'DELETE' });
-        router.refresh();
+        try {
+            const res = await fetch(`/api/categories?id=${id}`, { method: 'DELETE' });
+            if (!res.ok) {
+                const data = await res.json();
+                alert(`Error: ${data.error || 'Failed to delete category'}`);
+                return;
+            }
+            router.refresh();
+        } catch (e) {
+            alert('Network error');
+        }
     };
 
     const handleEdit = (cat: any) => {

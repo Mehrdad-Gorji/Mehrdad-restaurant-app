@@ -34,7 +34,8 @@ export default function CategoryForm() {
                 setImage('');
                 router.refresh();
             } else {
-                alert('Error creating category');
+                const data = await res.json();
+                alert(`Error: ${data.error || 'Failed to create category'}`);
             }
         } catch (e) { console.error(e); }
         setLoading(false);
