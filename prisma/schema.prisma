@@ -412,12 +412,22 @@ model SiteSettings {
 
   // ========== PAYMENT GATEWAY SETTINGS ==========
   
-  // Swedbank Pay
+  // Swedbank Pay - Main Settings
   swedbankPayEnabled     Boolean  @default(false)
   swedbankPayMode        String   @default("test")  // "test" or "production"
   swedbankPayPayeeId     String   @default("")
   swedbankPayAccessToken String   @default("")
   swedbankPayPayeeName   String   @default("")
+  swedbankPayTitle       String   @default("Swedbank Pay")
+  swedbankPayDescription String   @default("")
+  swedbankPayLanguage    String   @default("sv-SE")  // sv-SE, en-US, de-DE, etc.
+  swedbankPayTermsUrl    String   @default("")
+  swedbankPayLogoUrl     String   @default("")
+  
+  // Swedbank Pay - Options
+  swedbankPayInstantCapture Boolean @default(false)
+  swedbankPayAutoOrderStatus Boolean @default(false)
+  swedbankPayLogging     Boolean  @default(true)
   
   // Swish (via Swedbank Pay)
   swishEnabled           Boolean  @default(false)
