@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import ProductListManager from '@/components/admin/product-list-manager';
+import ProductImportExport from '@/components/admin/product-import-export';
 
 export default async function AdminProductsPage() {
     // Fetch products
@@ -52,21 +53,26 @@ export default async function AdminProductsPage() {
                         Manage your menu items
                     </p>
                 </div>
-                <Link href="/admin/products/new" style={{
-                    padding: '0.75rem 1.5rem',
-                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                    color: '#fff',
-                    borderRadius: '12px',
-                    textDecoration: 'none',
-                    fontWeight: '600',
-                    fontSize: '0.95rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)'
-                }}>
-                    + Add Product
-                </Link>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {/* Import/Export Buttons */}
+                    <ProductImportExport />
+
+                    <Link href="/admin/products/new" style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        textDecoration: 'none',
+                        fontWeight: '600',
+                        fontSize: '0.95rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)'
+                    }}>
+                        + Add Product
+                    </Link>
+                </div>
             </div>
 
             {/* Client Component for Interactive List */}
@@ -77,3 +83,4 @@ export default async function AdminProductsPage() {
         </div>
     );
 }
+
