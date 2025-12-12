@@ -118,26 +118,41 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                         {isEditing ? (
                             /* Edit Mode */
                             <div>
-                                <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                                    <div style={{ width: '100px', flexShrink: 0 }}>
-                                        <ImageUpload value={editImage} onChange={setEditImage} />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1rem' }}>
+                                    {/* Image Upload */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <div style={{ width: '80px', flexShrink: 0 }}>
+                                            <ImageUpload value={editImage} onChange={setEditImage} />
+                                        </div>
+                                        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
+                                            <strong style={{ color: '#fff' }}>{cat.slug}</strong>
+                                        </div>
                                     </div>
-                                    <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+
+                                    {/* Translation Fields - 2x2 Grid */}
+                                    <div style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(2, 1fr)',
+                                        gap: '0.75rem',
+                                        background: 'rgba(0,0,0,0.2)',
+                                        padding: '1rem',
+                                        borderRadius: '10px'
+                                    }}>
                                         <div>
                                             <label style={labelStyle}>🇬🇧 English</label>
-                                            <input style={inputStyle} value={editNameEn} onChange={e => setEditNameEn(e.target.value)} />
+                                            <input style={inputStyle} value={editNameEn} onChange={e => setEditNameEn(e.target.value)} placeholder="English name" />
                                         </div>
                                         <div>
                                             <label style={labelStyle}>🇸🇪 Svenska</label>
-                                            <input style={inputStyle} value={editNameSv} onChange={e => setEditNameSv(e.target.value)} />
+                                            <input style={inputStyle} value={editNameSv} onChange={e => setEditNameSv(e.target.value)} placeholder="Swedish name" />
                                         </div>
                                         <div>
                                             <label style={labelStyle}>🇩🇪 Deutsch</label>
-                                            <input style={inputStyle} value={editNameDe} onChange={e => setEditNameDe(e.target.value)} />
+                                            <input style={inputStyle} value={editNameDe} onChange={e => setEditNameDe(e.target.value)} placeholder="German name" />
                                         </div>
                                         <div>
                                             <label style={labelStyle}>🇮🇷 فارسی</label>
-                                            <input style={{ ...inputStyle, direction: 'rtl' }} value={editNameFa} onChange={e => setEditNameFa(e.target.value)} />
+                                            <input style={{ ...inputStyle, direction: 'rtl' }} value={editNameFa} onChange={e => setEditNameFa(e.target.value)} placeholder="نام فارسی" />
                                         </div>
                                     </div>
                                 </div>
