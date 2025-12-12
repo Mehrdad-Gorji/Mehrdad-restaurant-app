@@ -84,10 +84,12 @@ export default function ComboSmartImage({ image, items = [] }: Props) {
     return (
         <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gridTemplateRows: '1fr 1fr',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateRows: 'repeat(2, 1fr)',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            gap: '1px',
+            background: 'rgba(255,255,255,0.2)' // Divider color
         }}>
             {displayImages.map((img: string, i: number) => (
                 <SafeImage
@@ -97,8 +99,7 @@ export default function ComboSmartImage({ image, items = [] }: Props) {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        borderRight: i % 2 === 0 ? '1px solid rgba(255,255,255,0.2)' : 'none',
-                        borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.2)' : 'none'
+                        background: '#000' // Ensure no transparent gaps show through if image missing
                     }}
                     fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>}
                 />
