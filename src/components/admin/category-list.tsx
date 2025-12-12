@@ -8,6 +8,10 @@ export default function CategoryList({ initialCategories }: { initialCategories:
     const router = useRouter();
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editImage, setEditImage] = useState('');
+    const [editNameEn, setEditNameEn] = useState('');
+    const [editNameSv, setEditNameSv] = useState('');
+    const [editNameDe, setEditNameDe] = useState('');
+    const [editNameFa, setEditNameFa] = useState('');
     const [saving, setSaving] = useState(false);
 
     const handleDelete = async (id: string) => {
@@ -28,23 +32,58 @@ export default function CategoryList({ initialCategories }: { initialCategories:
     const handleEdit = (cat: any) => {
         setEditingId(cat.id);
         setEditImage(cat.image || '');
+        setEditNameEn(cat.translations.find((t: any) => t.language === 'en')?.name || '');
+        setEditNameSv(cat.translations.find((t: any) => t.language === 'sv')?.name || '');
+        setEditNameDe(cat.translations.find((t: any) => t.language === 'de')?.name || '');
+        setEditNameFa(cat.translations.find((t: any) => t.language === 'fa')?.name || '');
     };
 
     const handleSave = async (id: string) => {
         setSaving(true);
         try {
-            await fetch('/api/categories', {
+            const res = await fetch('/api/categories', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, image: editImage })
+                body: JSON.stringify({
+                    id,
+                    image: editImage,
+                    nameEn: editNameEn,
+                    nameSv: editNameSv,
+                    nameDe: editNameDe,
+                    nameFa: editNameFa
+                })
             });
-            setEditingId(null);
-            router.refresh();
+            if (!res.ok) {
+                const data = await res.json();
+                alert(`Error: ${data.error || 'Failed to save'}`);
+            } else {
+                setEditingId(null);
+                router.refresh();
+            }
         } catch (e) {
             console.error(e);
             alert('Error saving');
         }
         setSaving(false);
+    };
+
+    const inputStyle = {
+        width: '100%',
+        padding: '0.5rem',
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '8px',
+        color: '#fff',
+        fontSize: '0.85rem',
+        outline: 'none'
+    };
+
+    const labelStyle = {
+        display: 'block',
+        marginBottom: '0.25rem',
+        fontSize: '0.7rem',
+        color: 'rgba(255,255,255,0.5)',
+        fontWeight: '500' as const
     };
 
     if (initialCategories.length === 0) {
@@ -70,60 +109,39 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                     <div
                         key={cat.id}
                         style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
                             padding: '1rem',
                             background: 'rgba(255,255,255,0.03)',
                             borderRadius: '14px',
-                            border: '1px solid rgba(255,255,255,0.05)'
+                            border: isEditing ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid rgba(255,255,255,0.05)'
                         }}
                     >
-                        {/* Image */}
-                        <div style={{ flexShrink: 0 }}>
-                            {isEditing ? (
-                                <div style={{ width: '100px' }}>
-                                    <ImageUpload
-                                        value={editImage}
-                                        onChange={setEditImage}
-                                    />
+                        {isEditing ? (
+                            /* Edit Mode */
+                            <div>
+                                <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                                    <div style={{ width: '100px', flexShrink: 0 }}>
+                                        <ImageUpload value={editImage} onChange={setEditImage} />
+                                    </div>
+                                    <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                                        <div>
+                                            <label style={labelStyle}>🇬🇧 English</label>
+                                            <input style={inputStyle} value={editNameEn} onChange={e => setEditNameEn(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>🇸🇪 Svenska</label>
+                                            <input style={inputStyle} value={editNameSv} onChange={e => setEditNameSv(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>🇩🇪 Deutsch</label>
+                                            <input style={inputStyle} value={editNameDe} onChange={e => setEditNameDe(e.target.value)} />
+                                        </div>
+                                        <div>
+                                            <label style={labelStyle}>🇮🇷 فارسی</label>
+                                            <input style={{ ...inputStyle, direction: 'rtl' }} value={editNameFa} onChange={e => setEditNameFa(e.target.value)} />
+                                        </div>
+                                    </div>
                                 </div>
-                            ) : (
-                                <div style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    borderRadius: '12px',
-                                    background: cat.image
-                                        ? `url(${cat.image}) center/cover`
-                                        : 'rgba(139, 92, 246, 0.2)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    border: '2px solid rgba(255,255,255,0.1)'
-                                }}>
-                                    {!cat.image && <span style={{ fontSize: '1.25rem' }}>🍕</span>}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Info */}
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: '600', color: '#fff' }}>
-                                {enName || cat.slug}
-                            </div>
-                            <div style={{
-                                fontSize: '0.8rem',
-                                color: 'rgba(255,255,255,0.4)',
-                                marginTop: '0.15rem'
-                            }}>
-                                {cat.slug}
-                            </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            {isEditing ? (
-                                <>
+                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                                     <button
                                         onClick={() => handleSave(cat.id)}
                                         disabled={saving}
@@ -138,7 +156,7 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                                             cursor: saving ? 'not-allowed' : 'pointer'
                                         }}
                                     >
-                                        {saving ? '...' : 'Save'}
+                                        {saving ? '...' : '✓ Save'}
                                     </button>
                                     <button
                                         onClick={() => setEditingId(null)}
@@ -154,9 +172,40 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                                     >
                                         Cancel
                                     </button>
-                                </>
-                            ) : (
-                                <>
+                                </div>
+                            </div>
+                        ) : (
+                            /* View Mode */
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <div style={{ flexShrink: 0 }}>
+                                    <div style={{
+                                        width: '50px',
+                                        height: '50px',
+                                        borderRadius: '12px',
+                                        background: cat.image
+                                            ? `url(${cat.image}) center/cover`
+                                            : 'rgba(139, 92, 246, 0.2)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        border: '2px solid rgba(255,255,255,0.1)'
+                                    }}>
+                                        {!cat.image && <span style={{ fontSize: '1.25rem' }}>🍕</span>}
+                                    </div>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: '600', color: '#fff' }}>
+                                        {enName || cat.slug}
+                                    </div>
+                                    <div style={{
+                                        fontSize: '0.8rem',
+                                        color: 'rgba(255,255,255,0.4)',
+                                        marginTop: '0.15rem'
+                                    }}>
+                                        {cat.slug}
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
                                     <button
                                         onClick={() => handleEdit(cat)}
                                         style={{
@@ -186,12 +235,13 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                                     >
                                         🗑️
                                     </button>
-                                </>
-                            )}
-                        </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 );
             })}
         </div>
     );
 }
+
