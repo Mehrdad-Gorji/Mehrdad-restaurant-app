@@ -139,14 +139,29 @@ export default function ComboCard({ combo, lang }: Props) {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <span style={{
-                            fontSize: '1.25rem',
-                            fontWeight: '800',
-                            background: 'linear-gradient(135deg, #ff9800 0%, #ff5722 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text'
-                        }}>{Math.round(finalPrice)} SEK</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                            {/* If there's a discount, show original price with strikethrough */}
+                            {combo.discountValue && combo.discountValue > 0 && (
+                                <span style={{
+                                    fontSize: '0.9rem',
+                                    color: 'rgba(255,255,255,0.4)',
+                                    textDecoration: 'line-through'
+                                }}>
+                                    {Math.round(combo.price)} SEK
+                                </span>
+                            )}
+                            {/* Final price - bold if discounted */}
+                            <span style={{
+                                fontSize: '1.35rem',
+                                fontWeight: '800',
+                                background: 'linear-gradient(135deg, #ff9800 0%, #ff5722 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                            }}>
+                                {Math.round(finalPrice)} SEK
+                            </span>
+                        </div>
 
                         <button
                             onClick={() => setIsModalOpen(true)}
