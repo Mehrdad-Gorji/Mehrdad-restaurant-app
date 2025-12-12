@@ -18,12 +18,15 @@ export default function AboutAdminPage() {
         title: 'About Us',
         titleSv: 'Om Oss',
         titleDe: 'Über Uns',
+        titleFa: 'درباره ما',
         content: '',
         contentSv: '',
         contentDe: '',
+        contentFa: '',
         mission: '',
         missionSv: '',
         missionDe: '',
+        missionFa: '',
         heroImage: '',
         teamMembers: '[]'
     });
@@ -39,12 +42,15 @@ export default function AboutAdminPage() {
                         title: data.title || prev.title,
                         titleSv: data.titleSv || prev.titleSv,
                         titleDe: data.titleDe || prev.titleDe,
+                        titleFa: data.titleFa || prev.titleFa,
                         content: data.content || '',
                         contentSv: data.contentSv || '',
                         contentDe: data.contentDe || '',
+                        contentFa: data.contentFa || '',
                         mission: data.mission || '',
                         missionSv: data.missionSv || '',
                         missionDe: data.missionDe || '',
+                        missionFa: data.missionFa || '',
                         heroImage: data.heroImage || '',
                         teamMembers: data.teamMembers || '[]'
                     }));
@@ -237,6 +243,10 @@ export default function AboutAdminPage() {
                                     <label style={labelStyle}>Title (Deutsch)</label>
                                     <input type="text" name="titleDe" value={about.titleDe} onChange={handleChange} style={inputStyle} />
                                 </div>
+                                <div>
+                                    <label style={labelStyle}>تیتر (فارسی)</label>
+                                    <input type="text" name="titleFa" value={about.titleFa} onChange={handleChange} style={{ ...inputStyle, direction: 'rtl' }} />
+                                </div>
                             </div>
                         </section>
 
@@ -256,6 +266,10 @@ export default function AboutAdminPage() {
                                     <label style={labelStyle}>Mission (Deutsch)</label>
                                     <textarea name="missionDe" value={about.missionDe} onChange={handleChange} style={textareaStyle} />
                                 </div>
+                                <div>
+                                    <label style={labelStyle}>ماموریت (فارسی)</label>
+                                    <textarea name="missionFa" value={about.missionFa} onChange={handleChange} style={{ ...textareaStyle, direction: 'rtl' }} />
+                                </div>
                             </div>
                         </section>
 
@@ -274,6 +288,10 @@ export default function AboutAdminPage() {
                                 <div>
                                     <label style={labelStyle}>Content (Deutsch)</label>
                                     <textarea name="contentDe" value={about.contentDe} onChange={handleChange} style={{ ...textareaStyle, minHeight: '200px' }} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>محتوا (فارسی)</label>
+                                    <textarea name="contentFa" value={about.contentFa} onChange={handleChange} style={{ ...textareaStyle, minHeight: '200px', direction: 'rtl' }} />
                                 </div>
                             </div>
                         </section>

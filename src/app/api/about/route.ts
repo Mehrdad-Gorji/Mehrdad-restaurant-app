@@ -13,6 +13,7 @@ export async function GET() {
                     title: 'About Us',
                     titleSv: 'Om Oss',
                     titleDe: 'Über Uns',
+                    titleFa: 'درباره ما',
                     content: `Welcome to PizzaShop – your destination for authentic Italian cuisine!
 
 Founded in 2010, we started with a simple dream: to bring the true taste of Italy to your neighborhood. Our journey began in a small kitchen with big ambitions, and today we're proud to serve thousands of satisfied customers.
@@ -64,9 +65,23 @@ Was macht uns besonders? Es ist unser unerschütterliches Engagement für Qualit
 • Schnelle Lieferung bis zur Haustür
 • Freundlicher Service mit einem Lächeln
 • Engagement für Nachhaltigkeit`,
+                    contentFa: `به پیتزاشاپ خوش آمدید – مقصد شما برای غذای اصیل ایتالیایی!
+
+تأسیس در سال 2010، ما با یک رویای ساده شروع کردیم: آوردن طعم واقعی ایتالیا به محله شما.
+
+🍕 داستان ما
+
+چه چیزی ما را ویژه می‌کند؟ تعهد ما به کیفیت. هر پیتزایی که می‌سازیم با خمیر دست‌ساز تازه شروع می‌شود.
+
+🌟 چرا ما را انتخاب کنید?
+
+• مواد تازه هر روز
+• دستورهای سنتی با چاشنی مدرن
+• تحویل سریع درب منزل`,
                     mission: 'To deliver authentic Italian flavors with passion, quality, and a commitment to making every meal a memorable experience for our customers.',
                     missionSv: 'Att leverera autentiska italienska smaker med passion, kvalitet och ett engagemang för att göra varje måltid till en minnesvärd upplevelse för våra kunder.',
                     missionDe: 'Authentische italienische Aromen mit Leidenschaft, Qualität und dem Engagement zu liefern, jede Mahlzeit zu einem unvergesslichen Erlebnis für unsere Kunden zu machen.',
+                    missionFa: 'ماموریت ما ارائه طعم‌های اصیل ایتالیایی با اشتیاق، کیفیت و تعهد به ایجاد تجربه‌ای به یاد ماندنی برای مشتریانمان است.',
                     teamMembers: JSON.stringify([
                         { name: 'Marco Rossi', role: 'Head Chef', image: '' },
                         { name: 'Sofia Bianchi', role: 'Pastry Chef', image: '' },
@@ -92,12 +107,15 @@ export async function PUT(request: Request) {
             title: body.title,
             titleSv: body.titleSv,
             titleDe: body.titleDe,
+            titleFa: body.titleFa,
             content: body.content,
             contentSv: body.contentSv,
             contentDe: body.contentDe,
+            contentFa: body.contentFa,
             mission: body.mission,
             missionSv: body.missionSv,
             missionDe: body.missionDe,
+            missionFa: body.missionFa,
             heroImage: body.heroImage,
             teamMembers: body.teamMembers
         };

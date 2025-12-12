@@ -472,16 +472,19 @@ model AboutPage {
   title         String   @default("About Us")
   titleSv       String   @default("Om Oss")
   titleDe       String   @default("Über Uns")
+  titleFa       String   @default("درباره ما")
   
   // Main Content (multi-language)
   content       String   @default("Welcome to our restaurant! We are passionate about creating delicious food with the finest ingredients.")
   contentSv     String   @default("Välkommen till vår restaurang! Vi brinner för att skapa utsökt mat med de finaste ingredienserna.")
   contentDe     String   @default("Willkommen in unserem Restaurant! Wir sind leidenschaftlich daran interessiert, köstliches Essen mit den besten Zutaten zu kreieren.")
+  contentFa     String   @default("به رستوران ما خوش آمدید! ما با اشتیاق غذاهای لذیذ با بهترین مواد اولیه تهیه می‌کنیم.")
   
   // Mission Statement (multi-language)
   mission       String   @default("Our mission is to deliver authentic flavors and exceptional dining experiences.")
   missionSv     String   @default("Vårt uppdrag är att leverera autentiska smaker och exceptionella matupplevelser.")
   missionDe     String   @default("Unsere Mission ist es, authentische Aromen und außergewöhnliche Speiseerlebnisse zu liefern.")
+  missionFa     String   @default("ماموریت ما ارائه طعم‌های اصیل و تجربه‌های استثنایی غذایی است.")
   
   // Hero Image
   heroImage     String?
