@@ -41,7 +41,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
+        // Check file size (limit to 5MB for images)
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+        const fileBuffer = await file.arrayBuffer();
+
+        if (fileBuffer.byteLength > MAX_SIZE) {
+            console.error('❌ File too large:', fileBuffer.byteLength, 'bytes');
+            return NextResponse.json({
+                error: `File too large (${(fileBuffer.byteLength / 1024 / 1024).toFixed(2)}MB). Maximum is 5MB.`
+            }, { status: 400 });
+        }
+
+        const buffer = Buffer.from(fileBuffer);
 
         // Generate a safe, random filename (ASCII only) to avoid encoding issues
         const ext = file.name.split('.').pop()?.toLowerCase() || 'png';

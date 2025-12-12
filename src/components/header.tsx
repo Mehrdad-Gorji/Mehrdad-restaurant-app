@@ -39,7 +39,7 @@ export default async function Header({ lang }: { lang: Locale }) {
                     <Link href={`/${lang}`} className="logo-link">
                         {settings?.logo ? (
                             <img
-                                src={settings.logo.startsWith('/') ? settings.logo : `/api/uploads/${settings.logo}`}
+                                src={settings.logo.startsWith('/') || settings.logo.startsWith('http') ? settings.logo : `/api/uploads/${settings.logo}`}
                                 alt={settings.brandName || "Logo"}
                                 className="logo-icon"
                             />
