@@ -47,7 +47,8 @@ export default async function OrderPage({ params }: Props) {
         vatPriceInclusive: vatSettings.vatPriceInclusive,
     };
 
-    const safeOrder = serializePrisma(order);
+    // Double-sanitize to ensure no complex objects (like Decimal) leak to Client Components
+    const safeOrder = JSON.parse(JSON.stringify(serializePrisma(order)));
 
     let addressSnapshot: any = null;
     try {
