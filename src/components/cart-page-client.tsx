@@ -151,13 +151,13 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
                 </div>
 
                 <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr)',
+                    display: 'flex',
+                    flexWrap: 'wrap',
                     gap: '2rem',
                     alignItems: 'start'
                 }}>
                     {/* Cart Items */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '0' }}>
                         {items.map((item) => (
                             <div
                                 key={item.uniqueId}
@@ -288,6 +288,8 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
 
                     {/* Order Summary */}
                     <div style={{
+                        flex: '1 1 300px',
+                        minWidth: '0',
                         background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
                         backdropFilter: 'blur(20px)',
                         border: '1px solid rgba(255,255,255,0.08)',

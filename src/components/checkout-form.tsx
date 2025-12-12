@@ -347,12 +347,13 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
             <div className="container" style={{
                 position: 'relative',
                 zIndex: 1,
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr)',
-                gap: '2rem'
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '2rem',
+                alignItems: 'start'
             }}>
                 {/* Form Column */}
-                <div style={cardStyle}>
+                <div style={{ ...cardStyle, flex: '1 1 500px', minWidth: '0' }}>
                     <h2 style={{
                         fontSize: '2rem',
                         fontWeight: '700',
@@ -401,9 +402,10 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                 <span style={{ fontSize: '1.2rem' }}>📦</span>
                                 {dictionary?.checkout?.deliveryMethod || "Delivery Method"}
                             </h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                                 {/* Delivery Option */}
                                 <label style={{
+                                    flex: '1 1 100px',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
@@ -431,6 +433,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
 
                                 {/* Pickup Option */}
                                 <label style={{
+                                    flex: '1 1 100px',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
@@ -457,6 +460,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
 
                                 {/* Dine In Option */}
                                 <label style={{
+                                    flex: '1 1 100px',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
@@ -656,6 +660,8 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                 {/* Order Summary Column */}
                 <div style={{
                     ...cardStyle,
+                    flex: '1 1 300px',
+                    minWidth: '0',
                     background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
                     height: 'fit-content',
                     position: 'sticky',
