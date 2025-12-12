@@ -79,7 +79,26 @@ export default function ComboSmartImage({ image, items = [] }: Props) {
         );
     }
 
-    // 3 or more (Grid)
+    // 3 images specific layout (1 top left, 1 top right, 1 bottom full width)
+    if (productImages.length === 3) {
+        return (
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gridTemplateRows: '1fr 1fr',
+                width: '100%',
+                height: '100%'
+            }}>
+                <SafeImage src={productImages[0]} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRight: '1px solid rgba(255,255,255,0.2)', borderBottom: '1px solid rgba(255,255,255,0.2)' }} fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>} />
+                <SafeImage src={productImages[1]} style={{ width: '100%', height: '100%', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.2)' }} fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>} />
+                <div style={{ gridColumn: 'span 2', width: '100%', height: '100%' }}>
+                    <SafeImage src={productImages[2]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>} />
+                </div>
+            </div>
+        );
+    }
+
+    // 4 or more (2x2 Grid)
     const displayImages = productImages.slice(0, 4);
     return (
         <div style={{
@@ -90,7 +109,18 @@ export default function ComboSmartImage({ image, items = [] }: Props) {
             height: '100%'
         }}>
             {displayImages.map((img: string, i: number) => (
-                <SafeImage key={i} src={img} style={{ width: '100%', height: '100%', objectFit: 'cover', border: '1px solid white' }} fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>} />
+                <SafeImage
+                    key={i}
+                    src={img}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRight: i % 2 === 0 ? '1px solid rgba(255,255,255,0.2)' : 'none',
+                        borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.2)' : 'none'
+                    }}
+                    fallback={<div style={{ width: '100%', height: '100%', background: '#eee' }}></div>}
+                />
             ))}
         </div>
     );
