@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import ExtraCategoryForm from '@/components/admin/extra-category-form';
 import ExtraCategoryList from '@/components/admin/extra-category-list';
 import ResponsiveGrid from '@/components/admin/responsive-grid';
+import EntityImportExport from '@/components/admin/entity-import-export';
 
 export default async function ExtraCategoriesPage() {
     const categories = await prisma.extraCategory.findMany({
@@ -11,21 +12,36 @@ export default async function ExtraCategoriesPage() {
 
     return (
         <div>
-            <div style={{ marginBottom: '2rem' }}>
-                <h1 style={{
-                    fontSize: '2.5rem',
-                    fontWeight: '800',
-                    background: 'linear-gradient(135deg, #fff 0%, #a5b4fc 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    margin: 0,
-                    marginBottom: '0.5rem'
-                }}>
-                    Extra Categories
-                </h1>
-                <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '1rem' }}>
-                    Manage categories for product extras (toppings, sides, etc.)
-                </p>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '2rem',
+                flexWrap: 'wrap',
+                gap: '1rem'
+            }}>
+                <div>
+                    <h1 style={{
+                        fontSize: '2.5rem',
+                        fontWeight: '800',
+                        background: 'linear-gradient(135deg, #fff 0%, #a5b4fc 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        margin: 0,
+                        marginBottom: '0.5rem'
+                    }}>
+                        Extra Categories
+                    </h1>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', margin: 0, fontSize: '1rem' }}>
+                        Manage categories for product extras (toppings, sides, etc.)
+                    </p>
+                </div>
+                <EntityImportExport
+                    entityName="extra categories"
+                    exportUrl="/api/admin/extra-categories/export"
+                    importUrl="/api/admin/extra-categories/import"
+                    templateUrl="/api/admin/extra-categories/template"
+                />
             </div>
             <ResponsiveGrid columns="1-1">
                 <ExtraCategoryForm />
@@ -34,3 +50,4 @@ export default async function ExtraCategoriesPage() {
         </div>
     );
 }
+
