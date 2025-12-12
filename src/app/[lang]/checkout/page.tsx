@@ -1,4 +1,5 @@
 import CheckoutForm from '@/components/checkout-form';
+import AuthRequired from '@/components/auth-required';
 import { Locale } from '@/i18n-config';
 import { getDictionary } from '@/get-dictionary';
 
@@ -7,5 +8,9 @@ export default async function CheckoutPage({ params }: { params: Promise<{ lang:
     const locale = lang as Locale;
     const dictionary = await getDictionary(locale);
 
-    return <CheckoutForm dictionary={dictionary} />;
+    return (
+        <AuthRequired lang={lang}>
+            <CheckoutForm dictionary={dictionary} />
+        </AuthRequired>
+    );
 }
