@@ -293,21 +293,22 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
                                         ✕
                                     </button>
                                 </div>
-                        ))}
                             </div>
+                        ))}
+                    </div>
 
-                    {/* Order Summary */ }
-                            < div style = {{
-                            flex: '1 1 300px',
-                            minWidth: '0',
-                            background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
-                            backdropFilter: 'blur(20px)',
-                            border: '1px solid rgba(255,255,255,0.08)',
-                            borderRadius: '24px',
-                            padding: '2rem',
-                            position: 'sticky',
-                            top: '100px'
-                        }}>
+                    {/* Order Summary */}
+                    <div style={{
+                        flex: '1 1 300px',
+                        minWidth: '0',
+                        background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '24px',
+                        padding: '2rem',
+                        position: 'sticky',
+                        top: '100px'
+                    }}>
                         <h3 style={{
                             color: '#fff',
                             fontSize: '1.3rem',
