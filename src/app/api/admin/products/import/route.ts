@@ -51,9 +51,11 @@ export async function POST(request: NextRequest) {
                 });
 
                 if (!category) {
-                    // Create new category
+                    // Create new category with slug
+                    const categorySlug = categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                     category = await prisma.category.create({
                         data: {
+                            slug: categorySlug,
                             translations: {
                                 create: [
                                     { language: 'en', name: categoryName, description: '' },
