@@ -135,6 +135,7 @@ export async function getCombos(lang: string) {
     const combos = await prisma.combo.findMany({
         where: { isActive: true },
         include: {
+            translations: { where: { language: lang } },
             items: {
                 include: {
                     product: {
@@ -147,27 +148,32 @@ export async function getCombos(lang: string) {
         }
     });
 
-    return combos.map(c => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        description: c.description,
-        price: Number(c.price),
-        discountType: c.discountType,
-        discountValue: Number(c.discountValue),
-        image: c.image,
-        items: c.items.map(it => ({
-            quantity: it.quantity,
-            productName: it.product.translations[0]?.name || it.product.slug,
-            image: it.product.image
-        }))
-    }));
+    return combos.map(c => {
+        const translation = c.translations[0];
+        return {
+            id: c.id,
+            name: translation?.name || c.name,
+            slug: c.slug,
+            description: translation?.description || c.description,
+            price: Number(c.price),
+            discountType: c.discountType,
+            discountValue: Number(c.discountValue),
+            image: c.image,
+            translations: c.translations,
+            items: c.items.map(it => ({
+                quantity: it.quantity,
+                productName: it.product.translations[0]?.name || it.product.slug,
+                image: it.product.image
+            }))
+        };
+    });
 }
 
 export async function getCombo(slug: string, lang: string) {
     const combo = await prisma.combo.findUnique({
         where: { slug },
         include: {
+            translations: { where: { language: lang } },
             items: {
                 include: {
                     product: {
@@ -182,16 +188,19 @@ export async function getCombo(slug: string, lang: string) {
 
     if (!combo) return null;
 
+    const translation = combo.translations[0];
+
     return {
         id: combo.id,
-        name: combo.name,
+        name: translation?.name || combo.name,
         slug: combo.slug,
-        description: combo.description,
+        description: translation?.description || combo.description,
         price: Number(combo.price),
         discountType: combo.discountType,
         discountValue: Number(combo.discountValue),
         image: combo.image,
         isActive: combo.isActive,
+        translations: combo.translations,
         items: combo.items.map(it => ({
             quantity: it.quantity,
             productName: it.product.translations[0]?.name || it.product.slug,

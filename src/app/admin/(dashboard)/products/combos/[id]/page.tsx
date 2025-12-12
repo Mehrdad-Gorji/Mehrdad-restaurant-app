@@ -7,10 +7,10 @@ import { notFound } from 'next/navigation';
 export default async function EditComboPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    // Fetch Combo with items including product details
+    // Fetch Combo with items and translations
     const combo = await prisma.combo.findUnique({
         where: { id },
-        include: { items: true }
+        include: { items: true, translations: true }
     });
 
     if (!combo) notFound();
