@@ -7,26 +7,27 @@ import OrderActions from '@/components/admin/order-actions';
 type Props = { params: Promise<{ id: string }> };
 
 export default async function OrderPage({ params }: Props) {
-    const { id } = await params;
-
-    const order = await prisma.order.findUnique({
-        where: { id },
-        include: {
-            user: { include: { addresses: true } },
-            items: {
-                include: {
-                    product: { include: { translations: true } },
-                    combo: { include: { translations: true } },
-                    extras: { include: { extra: { include: { translations: true } } } }
-                }
-            },
-            payments: true
-        }
-    });
-
-    if (!order) notFound();
-
     try {
+        const { id } = await params;
+
+        const order = await prisma.order.findUnique({
+            where: { id },
+            include: {
+                user: { include: { addresses: true } },
+                items: {
+                    include: {
+                        product: { include: { translations: true } },
+                        combo: { include: { translations: true } },
+                        extras: { include: { extra: { include: { translations: true } } } }
+                    }
+                },
+                payments: true
+            }
+        });
+
+        if (!order) notFound();
+
+
         const settingsRaw = await prisma.siteSettings.findFirst();
 
         // Use Prisma fields directly instead of raw query which might fail on table naming
