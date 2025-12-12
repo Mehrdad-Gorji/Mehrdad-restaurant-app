@@ -90,6 +90,14 @@ export default function ProductImportExport() {
                 📥 Export
             </button>
 
+            {/* Template Button */}
+            <button
+                onClick={() => window.location.href = '/api/admin/products/template'}
+                style={{ ...buttonStyle, borderColor: '#10b981' }}
+            >
+                📄 Template
+            </button>
+
             {/* Import Button */}
             <button
                 onClick={handleImportClick}
