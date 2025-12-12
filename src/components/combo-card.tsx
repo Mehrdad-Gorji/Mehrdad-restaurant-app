@@ -72,7 +72,7 @@ export default function ComboCard({ combo, lang }: Props) {
                     onClick={() => setIsModalOpen(true)}
                     style={{
                         cursor: 'pointer',
-                        height: '180px',
+                        height: '240px',
                         background: 'linear-gradient(135deg, #1a1a1a, #0a0a0a)',
                         display: 'flex',
                         alignItems: 'center',
@@ -82,15 +82,6 @@ export default function ComboCard({ combo, lang }: Props) {
                     }}
                 >
                     <ComboSmartImage image={combo.image} items={combo.items} />
-                    {/* Overlay Gradient */}
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: '50%',
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)'
-                    }} />
                 </div>
 
                 <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
