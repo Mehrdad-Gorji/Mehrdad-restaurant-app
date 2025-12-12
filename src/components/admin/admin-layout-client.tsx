@@ -217,6 +217,7 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                     label: 'Settings',
                     subItems: [
                         { href: '/admin/settings/general', label: 'General' },
+                        { href: '/admin/settings/payments', label: '💳 Payments' },
                         { href: '/admin/settings/sales', label: 'Sales & Tax' },
                         { href: '/admin/settings/footer', label: 'Footer' },
                         { href: '/admin/settings/navigation', label: 'Navigation' },
