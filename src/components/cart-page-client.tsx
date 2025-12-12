@@ -168,6 +168,7 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
                                     borderRadius: '20px',
                                     padding: '1.5rem',
                                     display: 'flex',
+                                    flexWrap: 'wrap',
                                     gap: '1.5rem',
                                     alignItems: 'center'
                                 }}
@@ -189,7 +190,7 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
                                 </div>
 
                                 {/* Product Info */}
-                                <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ flex: '1 1 200px', minWidth: '0' }}>
                                     <h3 style={{
                                         color: '#fff',
                                         fontSize: '1.1rem',
@@ -204,100 +205,109 @@ export default function CartPageClient({ lang, dictionary }: { lang: string; dic
                                     </div>
                                 </div>
 
-                                {/* Quantity Controls */}
+                                {/* Controls Container (Qty, Price, Remove) */}
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    borderRadius: '50px',
-                                    border: '1px solid rgba(255,255,255,0.1)'
+                                    gap: '1rem',
+                                    marginLeft: 'auto',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'flex-end'
                                 }}>
-                                    <button
-                                        onClick={() => updateQuantity(item.uniqueId, -1)}
-                                        style={{
-                                            width: '36px',
-                                            height: '36px',
-                                            border: 'none',
-                                            background: 'transparent',
-                                            color: '#fff',
-                                            fontSize: '1.2rem',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >−</button>
-                                    <span style={{
-                                        padding: '0 0.75rem',
-                                        color: '#fff',
-                                        fontWeight: '600'
-                                    }}>{item.quantity}</span>
-                                    <button
-                                        onClick={() => updateQuantity(item.uniqueId, 1)}
-                                        style={{
-                                            width: '36px',
-                                            height: '36px',
-                                            border: 'none',
-                                            background: 'transparent',
-                                            color: '#fff',
-                                            fontSize: '1.2rem',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >+</button>
-                                </div>
-
-                                {/* Price */}
-                                <span style={{
-                                    fontWeight: '700',
-                                    fontSize: '1.1rem',
-                                    minWidth: '80px',
-                                    textAlign: 'right',
-                                    background: 'linear-gradient(135deg, #ff9800, #ff5722)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent'
-                                }}>
-                                    {item.price * item.quantity} SEK
-                                </span>
-
-                                {/* Remove Button */}
-                                <button
-                                    onClick={() => removeFromCart(item.uniqueId)}
-                                    style={{
-                                        width: '36px',
-                                        height: '36px',
-                                        borderRadius: '50%',
-                                        border: '1px solid rgba(255,100,100,0.3)',
-                                        background: 'rgba(255,100,100,0.1)',
-                                        color: '#ff6b6b',
-                                        cursor: 'pointer',
+                                    {/* Quantity Controls */}
+                                    <div style={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '1rem',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                >
-                                    ✕
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                                        background: 'rgba(255,255,255,0.05)',
+                                        borderRadius: '50px',
+                                        border: '1px solid rgba(255,255,255,0.1)'
+                                    }}>
+                                        <button
+                                            onClick={() => updateQuantity(item.uniqueId, -1)}
+                                            style={{
+                                                width: '36px',
+                                                height: '36px',
+                                                border: 'none',
+                                                background: 'transparent',
+                                                color: '#fff',
+                                                fontSize: '1.2rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >−</button>
+                                        <span style={{
+                                            padding: '0 0.75rem',
+                                            color: '#fff',
+                                            fontWeight: '600'
+                                        }}>{item.quantity}</span>
+                                        <button
+                                            onClick={() => updateQuantity(item.uniqueId, 1)}
+                                            style={{
+                                                width: '36px',
+                                                height: '36px',
+                                                border: 'none',
+                                                background: 'transparent',
+                                                color: '#fff',
+                                                fontSize: '1.2rem',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >+</button>
+                                    </div>
 
-                    {/* Order Summary */}
-                    <div style={{
-                        flex: '1 1 300px',
-                        minWidth: '0',
-                        background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '24px',
-                        padding: '2rem',
-                        position: 'sticky',
-                        top: '100px'
-                    }}>
+                                    {/* Price */}
+                                    <span style={{
+                                        fontWeight: '700',
+                                        fontSize: '1.1rem',
+                                        minWidth: '80px',
+                                        textAlign: 'right',
+                                        background: 'linear-gradient(135deg, #ff9800, #ff5722)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent'
+                                    }}>
+                                        {item.price * item.quantity} SEK
+                                    </span>
+
+                                    {/* Remove Button */}
+                                    <button
+                                        onClick={() => removeFromCart(item.uniqueId)}
+                                        style={{
+                                            width: '36px',
+                                            height: '36px',
+                                            borderRadius: '50%',
+                                            border: '1px solid rgba(255,100,100,0.3)',
+                                            background: 'rgba(255,100,100,0.1)',
+                                            color: '#ff6b6b',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '1rem',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                        ))}
+                            </div>
+
+                    {/* Order Summary */ }
+                            < div style = {{
+                            flex: '1 1 300px',
+                            minWidth: '0',
+                            background: 'linear-gradient(135deg, rgba(255,152,0,0.05), rgba(147,51,234,0.05))',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            borderRadius: '24px',
+                            padding: '2rem',
+                            position: 'sticky',
+                            top: '100px'
+                        }}>
                         <h3 style={{
                             color: '#fff',
                             fontSize: '1.3rem',
