@@ -21,7 +21,7 @@ interface Props {
 export default function ProductCard({ product, lang }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { formatCurrency } = useCurrency();
-    const { formatCurrency } = useCurrency();
+
 
     return (
         <>
