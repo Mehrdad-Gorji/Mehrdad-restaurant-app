@@ -3,6 +3,7 @@ import LanguageSwitcher from './language-switcher';
 import CartButton from './cart-button';
 import UserMenu from './user-menu';
 import MobileMenu from './mobile-menu';
+import WidthToggle from './width-toggle';
 import { Locale } from '@/i18n-config';
 import { getDictionary } from '@/get-dictionary';
 import { prisma } from '@/lib/prisma';
@@ -69,6 +70,7 @@ export default async function Header({ lang }: { lang: Locale }) {
 
                 {/* Desktop Right Side Actions */}
                 <div className="desktop-actions">
+                    <WidthToggle lang={lang} />
                     <CartButton lang={lang} label={dict.header.cart} />
                     <UserMenu lang={lang} />
                     <div className="lang-switcher-wrapper">

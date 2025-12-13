@@ -165,6 +165,19 @@ button {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+  transition: max-width 0.3s ease;
+}
+
+/* Full Width Layout Mode */
+html.layout-fullwidth .container {
+  max-width: 100%;
+  padding: 0 3rem;
+}
+
+@media (max-width: 768px) {
+  html.layout-fullwidth .container {
+    padding: 0 1.5rem;
+  }
 }
 
 /* Typography Utilities */

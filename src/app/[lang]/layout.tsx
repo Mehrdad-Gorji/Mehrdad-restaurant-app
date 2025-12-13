@@ -26,6 +26,7 @@ export async function generateStaticParams() {
 }
 
 import { CartProvider } from "@/context/cart-context";
+import { LayoutProvider } from "@/context/layout-context";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 
@@ -58,10 +59,12 @@ export default async function RootLayout({
     <html lang={lang} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <DynamicStyle settings={JSON.parse(JSON.stringify(settings))} />
-        <CartProvider>
-          <Header lang={lang as Locale} />
-          {children}
-        </CartProvider>
+        <LayoutProvider>
+          <CartProvider>
+            <Header lang={lang as Locale} />
+            {children}
+          </CartProvider>
+        </LayoutProvider>
         <Footer lang={lang as Locale} />
       </body>
     </html>
