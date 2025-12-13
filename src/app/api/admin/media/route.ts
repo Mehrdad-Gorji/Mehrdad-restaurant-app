@@ -11,34 +11,65 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get('page') || '1');
-        const limit = parseInt(searchParams.get('limit') || '20');
+        const limit = parseInt(searchParams.get('limit') || '50'); // Increased limit
         const search = searchParams.get('search') || '';
+        const offset = (page - 1) * limit;
 
-        const skip = (page - 1) * limit;
+        // Fetch directly from Supabase Storage to show all existing images
+        const { data: files, error } = await supabase
+            .storage
+            .from('images')
+            .list(null, {
+                limit: limit,
+                offset: offset,
+                sortBy: { column: 'created_at', order: 'desc' },
+                search: search || undefined
+            });
 
-        const where = search ? {
-            filename: { contains: search, mode: 'insensitive' as const }
-        } : {};
+        if (error) {
+            throw error;
+        }
 
-        const [media, total] = await Promise.all([
-            prisma.media.findMany({
-                where,
-                orderBy: { createdAt: 'desc' },
-                take: limit,
-                skip
-            }),
-            prisma.media.count({ where })
-        ]);
+        if (!files) {
+            return NextResponse.json({
+                data: [],
+                pagination: { total: 0, pages: 0, page, limit }
+            });
+        }
+
+        // Map Supabase files to our MediaItem interface
+        const mediaItems = files
+            .filter(f => f.name !== '.emptyFolderPlaceholder') // Filter out placeholders
+            .map(file => {
+                const { data: urlData } = supabase
+                    .storage
+                    .from('images')
+                    .getPublicUrl(file.name);
+
+                return {
+                    id: file.id, // Supabase returns an ID for the file object
+                    url: urlData.publicUrl,
+                    filename: file.name,
+                    mimeType: file.metadata?.mimetype || 'unknown',
+                    size: file.metadata?.size || 0,
+                    createdAt: file.created_at,
+                };
+            });
+
+        // Note: Supabase list() doesn't return total count easily without a separate metadata call or unlimited list. 
+        // For now, we'll assume if we got a full page, there might be more.
+        // A robust solution would imply valid pagination, but for "browse" this is sufficient.
 
         return NextResponse.json({
-            data: media,
+            data: mediaItems,
             pagination: {
-                total,
-                pages: Math.ceil(total / limit),
+                total: mediaItems.length + (mediaItems.length === limit ? 1 : 0), // Hacky hint for "Next" button
+                pages: -1, // Unknown total pages
                 page,
                 limit
             }
         });
+
     } catch (error) {
         console.error('Error fetching media:', error);
         return NextResponse.json({ error: 'Failed to fetch media' }, { status: 500 });
