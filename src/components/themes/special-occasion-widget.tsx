@@ -13,6 +13,7 @@ interface SpecialOccasionWidgetProps {
     customBadge?: string;
     customImage?: string;
     customColor?: string;
+    customOpacity?: number;
     customIcon?: string;
 }
 
@@ -188,6 +189,7 @@ export default function SpecialOccasionWidget({
     customBadge,
     customImage,
     customColor,
+    customOpacity = 100,
     customIcon
 }: SpecialOccasionWidgetProps) {
     const [isVisible, setIsVisible] = useState(false);
@@ -207,13 +209,23 @@ export default function SpecialOccasionWidget({
 
     // Handle CUSTOM theme
     if (theme === 'CUSTOM') {
+        const baseColor = customColor || '#3b82f6';
+        const opacityValue = (customOpacity ?? 100) / 100;
+
+        const hexToRgba = (hex: string, alpha: number) => {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})` : hex;
+        };
+
+        const accentColorWithOpacity = hexToRgba(baseColor, opacityValue);
+
         config = {
             icon: customIcon || '🎨',
-            gradient: `linear-gradient(135deg, ${customColor || '#3b82f6'} 0%, #1f2937 100%)`, // Fallback gradient
+            gradient: `linear-gradient(135deg, ${accentColorWithOpacity} 0%, #1f2937 100%)`,
             backgroundImage: customImage,
-            accentColor: customColor || '#3b82f6',
+            accentColor: baseColor,
             textColor: '#ffffff',
-            buttonGradient: `linear-gradient(135deg, ${customColor || '#3b82f6'}, ${customColor ? customColor + 'dd' : '#2563eb'})`,
+            buttonGradient: `linear-gradient(135deg, ${baseColor}, ${baseColor}dd)`,
             defaultTitle: { en: 'SPECIAL OFFER', fa: 'پیشنهاد ویژه' },
             defaultSubtitle: { en: 'Check out our latest custom deals!', fa: 'از پیشنهادهای ویژه ما دیدن کنید!' },
             defaultBadge: { en: 'CUSTOM', fa: 'سفارشی' },
@@ -264,7 +276,7 @@ export default function SpecialOccasionWidget({
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    opacity: 0.4
+                    opacity: theme === 'CUSTOM' ? 1 : 0.4
                 }} />
             )}
 

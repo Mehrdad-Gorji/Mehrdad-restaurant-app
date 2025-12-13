@@ -28,6 +28,7 @@ export default function ThemeSettingsPage() {
     // Custom Theme State
     const [customImage, setCustomImage] = useState('');
     const [customColor, setCustomColor] = useState('#3b82f6');
+    const [customOpacity, setCustomOpacity] = useState(100);
     const [customIcon, setCustomIcon] = useState('🎨');
 
     const [loading, setLoading] = useState(true);
@@ -47,6 +48,7 @@ export default function ThemeSettingsPage() {
 
                     const cImage = data.find((s: any) => s.key === 'theme_custom_image');
                     const cColor = data.find((s: any) => s.key === 'theme_custom_color');
+                    const cOpacity = data.find((s: any) => s.key === 'theme_custom_opacity');
                     const cIcon = data.find((s: any) => s.key === 'theme_custom_icon');
 
                     if (theme) setActiveTheme(theme.value);
@@ -57,6 +59,7 @@ export default function ThemeSettingsPage() {
 
                     if (cImage) setCustomImage(cImage.value);
                     if (cColor) setCustomColor(cColor.value);
+                    if (cOpacity) setCustomOpacity(parseInt(cOpacity.value) || 100);
                     if (cIcon) setCustomIcon(cIcon.value);
                 }
                 setLoading(false);
@@ -80,6 +83,7 @@ export default function ThemeSettingsPage() {
 
                 fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_image', value: customImage }) }),
                 fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_color', value: customColor }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_opacity', value: customOpacity.toString() }) }),
                 fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_icon', value: customIcon }) }),
             ]);
 
@@ -475,6 +479,18 @@ export default function ThemeSettingsPage() {
                             </div>
 
                             <div>
+                                <label style={labelStyle}>Accent Opacity: {customOpacity}%</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={customOpacity}
+                                    onChange={e => setCustomOpacity(Number(e.target.value))}
+                                    style={{ width: '100%', marginTop: '0.5rem', accentColor: customColor }}
+                                />
+                            </div>
+
+                            <div>
                                 <label style={labelStyle}>Theme Icon (Emoji)</label>
                                 <input
                                     value={customIcon}
@@ -567,6 +583,7 @@ export default function ThemeSettingsPage() {
                                     // Custom Theme Props
                                     customImage={customImage}
                                     customColor={customColor}
+                                    customOpacity={customOpacity}
                                     customIcon={customIcon}
                                 />
                             </div>
