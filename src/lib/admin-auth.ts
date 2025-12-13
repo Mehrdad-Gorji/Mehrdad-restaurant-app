@@ -30,14 +30,54 @@ export async function getAdminSession(): Promise<AdminUser | null> {
         // Verify user still exists and is still admin
         const user = await prisma.user.findUnique({
             where: { id: decoded.id },
-            select: { id: true, email: true, name: true, role: true, adminRole: true }
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                adminRole: true,
+                workStart: true,
+                workEnd: true
+            }
         });
 
         if (!user || user.role !== 'ADMIN') {
             return null;
         }
 
-        return user;
+        // Update lastSeen (async, don't await to not block)
+        prisma.user.update({
+            where: { id: user.id },
+            data: { lastSeen: new Date() }
+        }).catch(() => { });
+
+        // Enforce Working Hours (Skip for Super Admin)
+        if (user.adminRole !== 'SUPER_ADMIN' && user.workStart && user.workEnd) {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            const [startH, startM] = user.workStart.split(':').map(Number);
+            const [endH, endM] = user.workEnd.split(':').map(Number);
+
+            const startTime = startH * 60 + startM;
+            const endTime = endH * 60 + endM;
+
+            // Handle shifts spanning midnight (e.g. 22:00 to 06:00)
+            let isAllowed = false;
+            if (startTime <= endTime) {
+                // Standard shift (e.g. 09:00 to 17:00)
+                isAllowed = currentTime >= startTime && currentTime < endTime;
+            } else {
+                // Night shift (e.g. 22:00 to 06:00)
+                isAllowed = currentTime >= startTime || currentTime < endTime;
+            }
+
+            if (!isAllowed) {
+                return null; // Deny access
+            }
+        }
+
+        return user as AdminUser;
     } catch (error) {
         return null;
     }

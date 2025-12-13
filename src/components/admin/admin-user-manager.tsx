@@ -9,6 +9,9 @@ interface AdminUser {
     name: string | null;
     phone: string | null;
     adminRole: string | null;
+    lastSeen: string | null;
+    workStart: string | null;
+    workEnd: string | null;
     createdAt: string;
 }
 
@@ -21,6 +24,12 @@ const ADMIN_ROLES = [
 ];
 
 export default function AdminUserManager({ admins, currentAdminId }: { admins: any[], currentAdminId: string }) {
+    const isOnline = (lastSeen: string | null) => {
+        if (!lastSeen) return false;
+        const diff = new Date().getTime() - new Date(lastSeen).getTime();
+        return diff < 5 * 60 * 1000; // 5 mins
+    };
+
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
@@ -32,6 +41,8 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [adminRole, setAdminRole] = useState('STAFF');
+    const [workStart, setWorkStart] = useState('');
+    const [workEnd, setWorkEnd] = useState('');
 
     const resetForm = () => {
         setName('');
@@ -39,6 +50,8 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
         setPhone('');
         setPassword('');
         setAdminRole('STAFF');
+        setWorkStart('');
+        setWorkEnd('');
         setEditingUser(null);
     };
 
@@ -54,6 +67,8 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
         setPhone(user.phone || '');
         setPassword('');
         setAdminRole(user.adminRole || 'STAFF');
+        setWorkStart(user.workStart || '');
+        setWorkEnd(user.workEnd || '');
         setIsModalOpen(true);
     };
 
@@ -74,7 +89,9 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
                 email,
                 phone,
                 password: password || undefined,
-                adminRole
+                adminRole,
+                workStart: workStart || null,
+                workEnd: workEnd || null
             };
 
             const res = await fetch('/api/admin/users', {
@@ -182,6 +199,17 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
                                     fontSize: '0.75rem',
                                     fontWeight: '600'
                                 }}>You</span>
+                            )}
+                            {isOnline(user.lastSeen) && (
+                                <span style={{
+                                    background: '#10b981',
+                                    color: 'white',
+                                    padding: '0.2rem 0.6rem',
+                                    borderRadius: '20px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '600',
+                                    boxShadow: '0 0 10px rgba(16, 185, 129, 0.4)'
+                                }}>Online</span>
                             )}
                         </div>
 
@@ -356,6 +384,43 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
                                             borderRadius: '10px', color: '#fff', fontSize: '1rem', outline: 'none'
                                         }}
                                     />
+                                </div>
+
+                                <div style={{ marginBottom: '1.25rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', fontWeight: '600', marginBottom: '0.5rem' }}>Working Hours (Optional)</label>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.25rem' }}>Start Time</label>
+                                            <input
+                                                type="time"
+                                                value={workStart}
+                                                onChange={e => setWorkStart(e.target.value)}
+                                                style={{
+                                                    width: '100%', padding: '0.75rem 1rem',
+                                                    background: 'rgba(255,255,255,0.05)',
+                                                    border: '1px solid rgba(255,255,255,0.1)',
+                                                    borderRadius: '10px', color: '#fff', fontSize: '1rem', outline: 'none'
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.25rem' }}>End Time</label>
+                                            <input
+                                                type="time"
+                                                value={workEnd}
+                                                onChange={e => setWorkEnd(e.target.value)}
+                                                style={{
+                                                    width: '100%', padding: '0.75rem 1rem',
+                                                    background: 'rgba(255,255,255,0.05)',
+                                                    border: '1px solid rgba(255,255,255,0.1)',
+                                                    borderRadius: '10px', color: '#fff', fontSize: '1rem', outline: 'none'
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.5rem' }}>
+                                        Leave empty for 24/7 access. Access will be denied outside these hours.
+                                    </p>
                                 </div>
 
                                 <div style={{ marginBottom: '1rem' }}>

@@ -18,6 +18,9 @@ export async function GET() {
             name: true,
             phone: true,
             adminRole: true,
+            lastSeen: true,
+            workStart: true,
+            workEnd: true,
             createdAt: true
         }
     });
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-        const { name, email, phone, password, adminRole } = await request.json();
+        const { name, email, phone, password, adminRole, workStart, workEnd } = await request.json();
 
         if (!email || !password) {
             return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
@@ -54,7 +57,9 @@ export async function POST(request: NextRequest) {
                 name,
                 phone,
                 role: 'ADMIN',
-                adminRole: adminRole || 'STAFF'
+                adminRole: adminRole || 'STAFF',
+                workStart: workStart || null,
+                workEnd: workEnd || null
             }
         });
 
@@ -75,7 +80,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     try {
-        const { id, name, email, phone, password, adminRole } = await request.json();
+        const { id, name, email, phone, password, adminRole, workStart, workEnd } = await request.json();
 
         if (!id) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
@@ -86,6 +91,8 @@ export async function PATCH(request: NextRequest) {
         if (email !== undefined) data.email = email.toLowerCase();
         if (phone !== undefined) data.phone = phone;
         if (adminRole !== undefined) data.adminRole = adminRole;
+        if (workStart !== undefined) data.workStart = workStart;
+        if (workEnd !== undefined) data.workEnd = workEnd;
 
         // Only hash and update password if provided
         if (password) {
