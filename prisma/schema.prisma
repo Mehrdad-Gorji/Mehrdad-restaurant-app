@@ -438,6 +438,10 @@ model SiteSettings {
   // Card Payments (via Swedbank Pay)
   cardPaymentEnabled     Boolean  @default(false)
 
+  // Currency Settings
+  currency        String   @default("SEK") // SEK, EUR, USD
+  currencySymbol  String   @default("kr")  // kr, €, $
+
   updatedAt       DateTime @updatedAt
 }
 
