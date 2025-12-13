@@ -34,7 +34,17 @@ export default async function Home({
     const themeSettings = await prisma.setting.findMany({
       where: {
         key: {
-          in: ['active_theme', 'theme_custom_title', 'theme_custom_subtitle', 'theme_custom_button', 'theme_custom_badge']
+          in: [
+            'active_theme',
+            'theme_custom_title',
+            'theme_custom_subtitle',
+            'theme_custom_button',
+            'theme_custom_badge',
+            'theme_custom_image',
+            'theme_custom_color',
+            'theme_custom_opacity',
+            'theme_custom_icon'
+          ]
         }
       }
     });
@@ -46,6 +56,12 @@ export default async function Home({
     customSubtitle = themeSettings.find(s => s.key === 'theme_custom_subtitle')?.value;
     customButtonText = themeSettings.find(s => s.key === 'theme_custom_button')?.value;
     customBadge = themeSettings.find(s => s.key === 'theme_custom_badge')?.value;
+
+    // New Custom Theme Props
+    var customImage = themeSettings.find(s => s.key === 'theme_custom_image')?.value;
+    var customColor = themeSettings.find(s => s.key === 'theme_custom_color')?.value;
+    var customOpacity = themeSettings.find(s => s.key === 'theme_custom_opacity')?.value;
+    var customIcon = themeSettings.find(s => s.key === 'theme_custom_icon')?.value;
 
   } catch (e) {
     console.warn('Failed to fetch theme settings', e);
@@ -330,6 +346,10 @@ export default async function Home({
             customSubtitle={customSubtitle}
             customButtonText={customButtonText}
             customBadge={customBadge}
+            customImage={customImage}
+            customColor={customColor}
+            customOpacity={customOpacity ? parseInt(customOpacity) : 100}
+            customIcon={customIcon}
           />
         </div>
 
