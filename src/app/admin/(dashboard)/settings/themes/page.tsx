@@ -193,46 +193,186 @@ export default function ThemeSettingsPage() {
 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                    gap: '1.5rem'
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                    gap: '1.25rem'
                 }}>
                     {THEMES.map(theme => {
                         const isActive = activeTheme === theme;
+
+                        // Theme-specific configurations
+                        const themeConfig: Record<string, { icon: string; gradient: string; emoji: string; description: string }> = {
+                            'NONE': {
+                                icon: '⚪',
+                                gradient: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
+                                emoji: '🌐',
+                                description: 'Default look'
+                            },
+                            'BLACK_FRIDAY': {
+                                icon: '🏷️',
+                                gradient: 'linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #000000 100%)',
+                                emoji: '🛍️',
+                                description: 'Mega discounts'
+                            },
+                            'CHRISTMAS': {
+                                icon: '🎄',
+                                gradient: 'linear-gradient(135deg, #165B33 0%, #BB2528 50%, #165B33 100%)',
+                                emoji: '🎅',
+                                description: 'Holiday magic'
+                            },
+                            'NEW_YEAR': {
+                                icon: '🎆',
+                                gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                                emoji: '🥂',
+                                description: 'Fresh start'
+                            },
+                            'VALENTINE': {
+                                icon: '💕',
+                                gradient: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #c94c4c 100%)',
+                                emoji: '💝',
+                                description: 'Love is in the air'
+                            },
+                            'EASTER': {
+                                icon: '🐰',
+                                gradient: 'linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #ffd3b6 100%)',
+                                emoji: '🥚',
+                                description: 'Spring celebration'
+                            },
+                            'HALLOWEEN': {
+                                icon: '🎃',
+                                gradient: 'linear-gradient(135deg, #ff6600 0%, #1a1a1a 50%, #ff6600 100%)',
+                                emoji: '👻',
+                                description: 'Spooky vibes'
+                            },
+                            'SUMMER': {
+                                icon: '☀️',
+                                gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff9a9e 100%)',
+                                emoji: '🏖️',
+                                description: 'Hot deals'
+                            },
+                            'EID': {
+                                icon: '🌙',
+                                gradient: 'linear-gradient(135deg, #1d4e5f 0%, #2d6a4f 50%, #40916c 100%)',
+                                emoji: '✨',
+                                description: 'Blessed celebration'
+                            }
+                        };
+
+                        const config = themeConfig[theme] || themeConfig['NONE'];
+                        const isEaster = theme === 'EASTER';
+
                         return (
                             <div
                                 key={theme}
                                 onClick={() => setActiveTheme(theme)}
                                 style={{
-                                    border: isActive ? '2px solid #6366f1' : '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '16px',
-                                    padding: '1.5rem',
-                                    background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.05)',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    textAlign: 'center',
                                     position: 'relative',
-                                    overflow: 'hidden'
+                                    borderRadius: '20px',
+                                    overflow: 'hidden',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                                    boxShadow: isActive
+                                        ? '0 20px 40px rgba(99, 102, 241, 0.4), 0 0 0 3px #8B5CF6'
+                                        : '0 4px 15px rgba(0,0,0,0.2)',
                                 }}
-                                onMouseOver={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-                                onMouseOut={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
                             >
+                                {/* Gradient Background */}
                                 <div style={{
-                                    fontWeight: 'bold', marginBottom: '0.5rem',
-                                    color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
-                                    fontSize: '1rem'
+                                    background: config.gradient,
+                                    padding: '24px 20px',
+                                    minHeight: '160px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    position: 'relative'
                                 }}>
-                                    {theme.replace('_', ' ')}
-                                </div>
-                                <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
-                                    {theme === 'NONE' ? 'Standard appearance' : 'Special occasion theme'}
-                                </div>
-                                {isActive && (
+                                    {/* Decorative Elements */}
                                     <div style={{
-                                        position: 'absolute', top: '10px', right: '10px',
-                                        width: '8px', height: '8px', background: '#10b981', borderRadius: '50%',
-                                        boxShadow: '0 0 10px #10b981'
-                                    }} />
-                                )}
+                                        position: 'absolute',
+                                        top: '-20px',
+                                        right: '-20px',
+                                        fontSize: '80px',
+                                        opacity: 0.15,
+                                        transform: 'rotate(15deg)'
+                                    }}>
+                                        {config.emoji}
+                                    </div>
+
+                                    {/* Active Indicator */}
+                                    {isActive && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '12px',
+                                            right: '12px',
+                                            width: '28px',
+                                            height: '28px',
+                                            background: 'linear-gradient(135deg, #10b981, #059669)',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.5)',
+                                            fontSize: '14px',
+                                            color: 'white',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            ✓
+                                        </div>
+                                    )}
+
+                                    {/* Icon */}
+                                    <div style={{
+                                        fontSize: '40px',
+                                        marginBottom: '12px',
+                                        filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
+                                    }}>
+                                        {config.icon}
+                                    </div>
+
+                                    {/* Text Content */}
+                                    <div>
+                                        <div style={{
+                                            fontWeight: '700',
+                                            fontSize: '1.1rem',
+                                            color: isEaster ? '#1a1a1a' : '#fff',
+                                            marginBottom: '4px',
+                                            textShadow: isEaster ? 'none' : '0 2px 4px rgba(0,0,0,0.3)',
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            {theme.replace('_', ' ')}
+                                        </div>
+                                        <div style={{
+                                            fontSize: '0.85rem',
+                                            color: isEaster ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)',
+                                            fontWeight: '400'
+                                        }}>
+                                            {config.description}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Bottom Bar */}
+                                <div style={{
+                                    background: isActive
+                                        ? 'linear-gradient(135deg, #8B5CF6, #6366F1)'
+                                        : 'rgba(0,0,0,0.4)',
+                                    padding: '10px 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '8px',
+                                    transition: 'all 0.3s'
+                                }}>
+                                    <span style={{
+                                        fontSize: '0.8rem',
+                                        fontWeight: '600',
+                                        color: 'white',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}>
+                                        {isActive ? '✓ Active' : 'Select'}
+                                    </span>
+                                </div>
                             </div>
                         );
                     })}
