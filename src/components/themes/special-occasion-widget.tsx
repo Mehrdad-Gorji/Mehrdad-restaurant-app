@@ -218,10 +218,11 @@ export default function SpecialOccasionWidget({
         };
 
         const accentColorWithOpacity = hexToRgba(baseColor, opacityValue);
+        const endColorWithOpacity = hexToRgba('#1f2937', opacityValue);
 
         config = {
             icon: customIcon || '🎨',
-            gradient: `linear-gradient(135deg, ${accentColorWithOpacity} 0%, #1f2937 100%)`,
+            gradient: `linear-gradient(135deg, ${accentColorWithOpacity} 0%, ${endColorWithOpacity} 100%)`,
             backgroundImage: customImage,
             accentColor: baseColor,
             textColor: '#ffffff',
@@ -260,7 +261,7 @@ export default function SpecialOccasionWidget({
                 minHeight: isBanner ? '400px' : '300px',
                 borderRadius: isBanner ? '0' : '24px',
                 overflow: 'hidden',
-                background: config.gradient,
+                background: isBanner ? 'transparent' : '#1a1a1a', // Fallback background
                 boxShadow: isBanner ? 'none' : '0 25px 50px -12px rgba(0,0,0,0.5)',
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: isHovered && !isBanner ? 'scale(1.02)' : 'scale(1)',
@@ -279,6 +280,14 @@ export default function SpecialOccasionWidget({
                     opacity: theme === 'CUSTOM' ? 1 : 0.4
                 }} />
             )}
+
+            {/* Gradient Overlay (Moved here to be ON TOP of image) */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: config.gradient,
+                opacity: 1
+            }} />
 
             {/* Dark Overlay for better text readability */}
             <div style={{
