@@ -367,18 +367,10 @@ export default function AboutAdminPage() {
                                         </div>
                                         <div>
                                             <label style={{ ...labelStyle, fontSize: '0.8rem', marginBottom: '0.3rem' }}>IMAGE</label>
-
-                                            {/* Simple Image URL input for now, ideally reused ImageUpload if compatible with layout */}
-                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                                {member.image && (
-                                                    <img src={member.image} alt="Preview" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
-                                                )}
-                                                <input
-                                                    type="text"
+                                            <div style={{ marginTop: '0.5rem' }}>
+                                                <ImageUpload
                                                     value={member.image}
-                                                    onChange={(e) => updateMember(index, 'image', e.target.value)}
-                                                    style={{ ...inputStyle, marginTop: 0, padding: '0.5rem', flex: 1 }}
-                                                    placeholder="/uploads/..."
+                                                    onChange={(url) => updateMember(index, 'image', url)}
                                                 />
                                             </div>
                                         </div>

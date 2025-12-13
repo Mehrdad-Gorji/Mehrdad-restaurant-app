@@ -122,35 +122,17 @@ export default function CategoryList({ initialCategories }: { initialCategories:
                                     {/* Image & Slug Header */}
                                     <div style={{
                                         display: 'flex',
-                                        alignItems: 'center',
+                                        alignItems: 'flex-start',
                                         gap: '1rem',
                                         paddingBottom: '1rem',
                                         borderBottom: '1px solid rgba(255,255,255,0.1)'
                                     }}>
-                                        <div style={{
-                                            width: '60px',
-                                            height: '60px',
-                                            flexShrink: 0,
-                                            borderRadius: '10px',
-                                            background: editImage
-                                                ? `url(${editImage}) center/cover`
-                                                : 'rgba(139, 92, 246, 0.2)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            border: '2px solid rgba(255,255,255,0.1)'
-                                        }}>
-                                            {!editImage && <span style={{ fontSize: '1.5rem' }}>🍕</span>}
+                                        <div style={{ flex: '0 0 150px' }}>
+                                            <ImageUpload value={editImage} onChange={setEditImage} />
                                         </div>
-                                        <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: '600', color: '#fff', marginBottom: '0.3rem' }}>{cat.slug}</div>
-                                            <input
-                                                type="text"
-                                                placeholder="Image URL..."
-                                                value={editImage}
-                                                onChange={e => setEditImage(e.target.value)}
-                                                style={{ ...inputStyle, fontSize: '0.75rem', padding: '0.4rem' }}
-                                            />
+                                        <div style={{ flex: 1, paddingTop: '0.5rem' }}>
+                                            <div style={{ fontWeight: '600', color: '#fff', marginBottom: '0.3rem', fontSize: '1.1rem' }}>{cat.slug}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>Click image to select from library</div>
                                         </div>
                                     </div>
 
