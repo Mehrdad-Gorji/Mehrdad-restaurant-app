@@ -600,6 +600,8 @@ export default function CouponForm({ initialData, availableProducts = [], availa
                     border-radius: 8px;
                     margin-bottom: 0.75rem;
                     font-size: 0.9rem;
+                    background: white;
+                    color: #0f172a;
                 }
 
                 .checkbox-list {
@@ -608,6 +610,7 @@ export default function CouponForm({ initialData, availableProducts = [], availa
                     border: 1px solid #e2e8f0;
                     border-radius: 8px;
                     background: white;
+                    color: #0f172a;
                 }
 
                 .checkbox-item {
@@ -618,6 +621,7 @@ export default function CouponForm({ initialData, availableProducts = [], availa
                     cursor: pointer;
                     border-bottom: 1px solid #f1f5f9;
                     transition: background 0.15s;
+                    color: #0f172a;
                 }
                 .checkbox-item:last-child { border-bottom: none; }
                 .checkbox-item:hover { background: #f8fafc; }
