@@ -113,36 +113,54 @@ export default function MediaLibraryPage() {
                 <>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                        gap: '1rem'
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                        gap: '0.75rem',
+                        marginTop: '1rem'
                     }}>
                         {media.map((item) => (
-                            <div key={item.id} className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group relative" style={{ aspectRatio: '1/1' }}>
-                                <div className="aspect-square relative bg-gray-100">
+                            <div key={item.id} style={{
+                                aspectRatio: '1/1',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                borderRadius: '8px',
+                                border: '1px solid #e5e7eb',
+                                backgroundColor: '#f9fafb'
+                            }} className="group">
+                                {/* Image Container */}
+                                <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                                     <img
                                         src={item.url}
                                         alt={item.filename}
-                                        className="w-full h-full object-cover"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0
+                                        }}
                                     />
+                                    {/* Overlay Actions */}
                                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
                                         <button
                                             onClick={() => copyToClipboard(item.url)}
-                                            className="p-1 bg-white rounded-full hover:bg-gray-100"
+                                            className="p-1.5 bg-white rounded-full hover:bg-gray-100 shadow-sm"
                                             title="Copy URL"
                                         >
                                             📋
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="p-1 bg-white rounded-full hover:bg-red-50 text-red-600"
+                                            className="p-1.5 bg-white rounded-full hover:bg-red-50 text-red-600 shadow-sm"
                                             title="Delete"
                                         >
                                             🗑️
                                         </button>
                                     </div>
-                                </div>
-                                <div className="p-2 text-xs text-gray-600 truncate" title={item.filename}>
-                                    {item.filename}
+                                    {/* Filename Overlay (optional, maybe at bottom) */}
+                                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-[10px] truncate px-1 py-0.5 pointer-events-none">
+                                        {item.filename}
+                                    </div>
                                 </div>
                             </div>
                         ))}
