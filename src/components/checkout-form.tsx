@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/cart-context';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { calculateVAT, VATSettings, DEFAULT_VAT_SETTINGS } from '@/lib/vat';
 import { isShopOpen } from '@/lib/shop-status';
 import { useCurrency } from '@/hooks/use-currency';
@@ -10,6 +10,8 @@ import { useCurrency } from '@/hooks/use-currency';
 export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
     const { items, total, clearCart } = useCart();
     const router = useRouter();
+    const pathname = usePathname();
+    const lang = pathname?.split('/')[1] || 'en'; // Extract language from URL
     const { formatPrice, symbol } = useCurrency();
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
@@ -271,7 +273,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
 
             if (res.ok) {
                 clearCart();
-                router.push(`/checkout/success?orderId=${data.orderId}`);
+                router.push(`/${lang}/checkout/success?orderId=${data.orderId}`);
             } else {
                 alert(data.details || data.error || 'Failed to submit order');
             }
