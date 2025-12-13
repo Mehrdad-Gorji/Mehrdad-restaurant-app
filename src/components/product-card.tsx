@@ -20,7 +20,7 @@ interface Props {
 
 export default function ProductCard({ product, lang }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { formatCurrency } = useCurrency();
+    const { formatPrice } = useCurrency();
 
 
     return (
@@ -133,7 +133,7 @@ export default function ProductCard({ product, lang }: Props) {
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
-                        }}>{formatCurrency(product.price)}</span>
+                        }}>{formatPrice(product.price)}</span>
 
                         <button
                             onClick={() => setIsModalOpen(true)}
