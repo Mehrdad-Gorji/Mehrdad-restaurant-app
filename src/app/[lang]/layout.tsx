@@ -31,6 +31,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 
 import DynamicStyle from "@/components/dynamic-style";
+import CurrencyProvider from "@/components/currency-provider";
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -59,13 +60,18 @@ export default async function RootLayout({
     <html lang={lang} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <DynamicStyle settings={JSON.parse(JSON.stringify(settings))} />
-        <LayoutProvider>
-          <CartProvider>
-            <Header lang={lang as Locale} />
-            {children}
-          </CartProvider>
-        </LayoutProvider>
-        <Footer lang={lang as Locale} />
+        <CurrencyProvider
+          currency={settings?.currency || 'SEK'}
+          symbol={settings?.currencySymbol || 'kr'}
+        >
+          <LayoutProvider>
+            <CartProvider>
+              <Header lang={lang as Locale} />
+              {children}
+            </CartProvider>
+          </LayoutProvider>
+          <Footer lang={lang as Locale} />
+        </CurrencyProvider>
       </body>
     </html>
   );

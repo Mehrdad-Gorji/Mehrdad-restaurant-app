@@ -5,10 +5,12 @@ import { useCart } from '@/context/cart-context';
 import { useRouter } from 'next/navigation';
 import { calculateVAT, VATSettings, DEFAULT_VAT_SETTINGS } from '@/lib/vat';
 import { isShopOpen } from '@/lib/shop-status';
+import { useCurrency } from '@/hooks/use-currency';
 
 export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
     const { items, total, clearCart } = useCart();
     const router = useRouter();
+    const { formatPrice, symbol } = useCurrency();
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
 

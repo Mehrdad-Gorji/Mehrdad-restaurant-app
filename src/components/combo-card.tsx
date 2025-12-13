@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCart } from '@/context/cart-context';
+import { useCurrency } from '@/hooks/use-currency';
 import ComboSmartImage from './combo-smart-image';
 import ComboDetailModal from './combo-detail-modal';
 
@@ -29,6 +30,7 @@ interface Props {
 
 export default function ComboCard({ combo, lang }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { formatPrice } = useCurrency();
 
     // Get translated name/description based on language
     const translation = combo.translations?.find(t => t.language === lang);
@@ -147,7 +149,7 @@ export default function ComboCard({ combo, lang }: Props) {
                                     color: 'rgba(255,255,255,0.4)',
                                     textDecoration: 'line-through'
                                 }}>
-                                    {Math.round(combo.price)} SEK
+                                    {formatPrice(combo.price)}
                                 </span>
                             )}
                             {/* Final price - bold if discounted */}
@@ -159,7 +161,7 @@ export default function ComboCard({ combo, lang }: Props) {
                                 WebkitTextFillColor: 'transparent',
                                 backgroundClip: 'text'
                             }}>
-                                {Math.round(finalPrice)} SEK
+                                {formatPrice(finalPrice)}
                             </span>
                         </div>
 
