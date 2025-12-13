@@ -72,7 +72,7 @@ export default function MediaLibraryPage() {
         if (!confirm('Are you sure you want to delete this image? This cannot be undone.')) return;
 
         try {
-            const res = await fetch(`/api/admin/media?id=${id}`, {
+            const res = await fetch(`/api/admin/media?id=${encodeURIComponent(id)}`, {
                 method: 'DELETE'
             });
 
