@@ -144,25 +144,41 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
     useEffect(() => {
         const fetchCount = async () => {
             try {
-                const res = await fetch('/api/admin/orders/count');
+                // Add cache: 'no-store' to ensure real-time data
+                const res = await fetch('/api/admin/orders/count', { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     setPendingCount(data.count);
                 }
 
-                const resMsg = await fetch('/api/admin/messages/count');
+                const resMsg = await fetch('/api/admin/messages/count', { cache: 'no-store' });
                 if (resMsg.ok) {
                     const dataMsg = await resMsg.json();
                     setPendingMessages(dataMsg.count);
                 }
             } catch (error) {
-                console.error('Failed to fetch order count', error);
+                console.error('Failed to fetch counts', error);
             }
         };
 
+        // Initial fetch
         fetchCount();
-        const interval = setInterval(fetchCount, 30000); // Poll every 30s
-        return () => clearInterval(interval);
+
+        // Poll frequently (every 10 seconds)
+        const interval = setInterval(fetchCount, 10000);
+
+        // Also refetch when tab becomes visible
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                fetchCount();
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
     }, []);
 
     useEffect(() => {
