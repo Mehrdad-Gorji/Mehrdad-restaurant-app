@@ -45,6 +45,7 @@ export default function AdminOrdersLive() {
     const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
     const [autoPrint, setAutoPrint] = useState(true);
     const [printerConnected, setPrinterConnected] = useState(false);
+    const [currencySymbol, setCurrencySymbol] = useState('kr');
     const autoPrintRef = useRef(true);
 
     useEffect(() => {
@@ -54,6 +55,18 @@ export default function AdminOrdersLive() {
     useEffect(() => {
         autoPrintRef.current = autoPrint;
     }, [autoPrint]);
+
+    // Fetch currency symbol from settings
+    useEffect(() => {
+        fetch('/api/site-settings')
+            .then(res => res.json())
+            .then(data => {
+                if (data?.currencySymbol) {
+                    setCurrencySymbol(data.currencySymbol);
+                }
+            })
+            .catch(console.error);
+    }, []);
 
     const initAudio = useCallback(() => {
         if (!audioContextRef.current && typeof window !== 'undefined') {
@@ -593,7 +606,7 @@ export default function AdminOrdersLive() {
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent'
                                     }}>
-                                        {Number(order.total)} SEK
+                                        {Number(order.total)} {currencySymbol}
                                     </div>
 
                                     <div style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.4)' }}>
@@ -706,7 +719,7 @@ export default function AdminOrdersLive() {
                                                 {order.items.map((item: any) => (
                                                     <div key={item.id} style={{ fontSize: '0.85rem', marginBottom: '0.25rem', display: 'flex', justifyContent: 'space-between' }}>
                                                         <span style={{ color: 'rgba(255,255,255,0.8)' }}>{item.quantity}x {item.product?.translations?.[0]?.name || item.combo?.translations?.[0]?.name || 'Item'}</span>
-                                                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>{Number(item.price)} SEK</span>
+                                                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>{Number(item.price)} {currencySymbol}</span>
                                                     </div>
                                                 ))}
                                             </div>
