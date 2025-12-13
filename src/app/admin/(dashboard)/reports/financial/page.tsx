@@ -131,7 +131,7 @@ export default function FinancialReportsPage() {
                             </div>
                         </div>
 
-                        {/* Total Tax */}
+                        {/* Total Tax with breakdown */}
                         <div style={{
                             background: 'rgba(255,255,255,0.03)',
                             padding: '1.5rem',
@@ -139,8 +139,19 @@ export default function FinancialReportsPage() {
                             border: '1px solid rgba(255,255,255,0.08)'
                         }}>
                             <div style={{ color: 'rgba(255,255,255,0.5)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Total Tax (VAT)</div>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#fbbf24' }}>
+                            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#fbbf24', marginBottom: '0.75rem' }}>
                                 {formatPrice(reportData.summary.totalTax)}
+                            </div>
+                            {/* VAT Breakdown */}
+                            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                                    <span style={{ color: 'rgba(255,255,255,0.6)' }}>🍕 Food ({reportData.summary.foodVatRate}%)</span>
+                                    <span style={{ color: '#a3e635' }}>{formatPrice(reportData.summary.foodTax)}</span>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                                    <span style={{ color: 'rgba(255,255,255,0.6)' }}>🚚 Delivery ({reportData.summary.deliveryVatRate}%)</span>
+                                    <span style={{ color: '#f97316' }}>{formatPrice(reportData.summary.deliveryTax)}</span>
+                                </div>
                             </div>
                         </div>
 

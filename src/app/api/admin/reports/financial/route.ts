@@ -59,36 +59,50 @@ export async function GET(request: Request) {
         let totalSales = 0;
         let totalOrders = orders.length;
         let totalTax = 0;
-        let foodTax = 0;
-        let deliveryTax = 0;
+        let totalFoodTax = 0;
+        let totalDeliveryTax = 0;
+        let totalFoodNet = 0;
+        let totalDeliveryNet = 0;
+
+        const foodVatRate = Number(vatSettings.vatRateReduced) || 0.07;
+        const deliveryVatRate = Number(vatSettings.vatRateStandard) || 0.19;
 
         const reportOrders = orders.map(order => {
             const orderTotal = Number(order.total);
-            const breakdown = calculateOrderVAT(orderTotal, vatSettings);
+            const deliveryFee = Number(order.deliveryFee) || 0;
+            const foodGross = orderTotal - deliveryFee;
+
+            // Calculate VAT for food (reduced rate, e.g., 7%)
+            const foodNet = foodGross / (1 + foodVatRate);
+            const foodVat = foodGross - foodNet;
+
+            // Calculate VAT for delivery (standard rate, e.g., 19%)
+            const deliveryNet = deliveryFee / (1 + deliveryVatRate);
+            const deliveryVat = deliveryFee - deliveryNet;
+
+            const totalOrderTax = foodVat + deliveryVat;
+            const totalOrderNet = foodNet + deliveryNet;
 
             // Accumulate
             totalSales += orderTotal;
-            totalTax += breakdown.vat;
-
-            // Heuristic breakdown (imperfect for existing DB structure which doesn't store per-item tax)
-            // But sufficient for general report based on current rules
-            // Food Tax part
-            const foodVatRate = vatSettings.vatRateReduced; // e.g. 0.07 or 0.12
-            // Delivery Tax part
-            const deliveryVatRate = vatSettings.vatRateStandard; // e.g. 0.19 or 0.25
-
-            // We need to re-calculate breakdown properly if we want split
-            // Simulating split based on delivery fee (if we had it, but API returns total)
-            // For now, we use the aggregate breakdown.vat which assumes "Food" rate mostly
-            // If we want perfection we need to fetch deliveryFee from order
+            totalTax += totalOrderTax;
+            totalFoodTax += foodVat;
+            totalDeliveryTax += deliveryVat;
+            totalFoodNet += foodNet;
+            totalDeliveryNet += deliveryNet;
 
             return {
                 id: order.id,
                 date: order.createdAt,
                 customer: order.user?.name || 'Guest',
                 total: orderTotal,
-                tax: breakdown.vat,
-                net: breakdown.net
+                tax: Number(totalOrderTax.toFixed(2)),
+                net: Number(totalOrderNet.toFixed(2)),
+                foodTax: Number(foodVat.toFixed(2)),
+                deliveryTax: Number(deliveryVat.toFixed(2)),
+                foodNet: Number(foodNet.toFixed(2)),
+                deliveryNet: Number(deliveryNet.toFixed(2)),
+                deliveryFee: deliveryFee
             };
         });
 
@@ -98,6 +112,13 @@ export async function GET(request: Request) {
                 totalSales: Number(totalSales.toFixed(2)),
                 totalTax: Number(totalTax.toFixed(2)),
                 netSales: Number((totalSales - totalTax).toFixed(2)),
+                // VAT breakdown by rate
+                foodTax: Number(totalFoodTax.toFixed(2)),
+                deliveryTax: Number(totalDeliveryTax.toFixed(2)),
+                foodNet: Number(totalFoodNet.toFixed(2)),
+                deliveryNet: Number(totalDeliveryNet.toFixed(2)),
+                foodVatRate: (foodVatRate * 100).toFixed(0),
+                deliveryVatRate: (deliveryVatRate * 100).toFixed(0),
                 period: { start: startDate, end: endDate }
             },
             orders: reportOrders
