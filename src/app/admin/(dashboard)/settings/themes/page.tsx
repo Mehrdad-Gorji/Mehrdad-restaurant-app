@@ -200,7 +200,7 @@ export default function ThemeSettingsPage() {
                         const isActive = activeTheme === theme;
 
                         // Theme-specific configurations
-                        const themeConfig: Record<string, { icon: string; gradient: string; emoji: string; description: string }> = {
+                        const themeConfig: Record<string, { icon: string; gradient: string; backgroundImage?: string; emoji: string; description: string }> = {
                             'NONE': {
                                 icon: '⚪',
                                 gradient: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
@@ -210,48 +210,56 @@ export default function ThemeSettingsPage() {
                             'BLACK_FRIDAY': {
                                 icon: '🏷️',
                                 gradient: 'linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #000000 100%)',
+                                backgroundImage: '/images/themes/black-friday.png',
                                 emoji: '🛍️',
                                 description: 'Mega discounts'
                             },
                             'CHRISTMAS': {
                                 icon: '🎄',
                                 gradient: 'linear-gradient(135deg, #165B33 0%, #BB2528 50%, #165B33 100%)',
+                                backgroundImage: '/images/themes/christmas.png',
                                 emoji: '🎅',
                                 description: 'Holiday magic'
                             },
                             'NEW_YEAR': {
                                 icon: '🎆',
                                 gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                                backgroundImage: '/images/themes/new-year.png',
                                 emoji: '🥂',
                                 description: 'Fresh start'
                             },
                             'VALENTINE': {
                                 icon: '💕',
                                 gradient: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #c94c4c 100%)',
+                                backgroundImage: '/images/themes/valentine.png',
                                 emoji: '💝',
                                 description: 'Love is in the air'
                             },
                             'EASTER': {
                                 icon: '🐰',
                                 gradient: 'linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #ffd3b6 100%)',
+                                backgroundImage: '/images/themes/easter.png',
                                 emoji: '🥚',
                                 description: 'Spring celebration'
                             },
                             'HALLOWEEN': {
                                 icon: '🎃',
                                 gradient: 'linear-gradient(135deg, #ff6600 0%, #1a1a1a 50%, #ff6600 100%)',
+                                backgroundImage: '/images/themes/halloween.png',
                                 emoji: '👻',
                                 description: 'Spooky vibes'
                             },
                             'SUMMER': {
                                 icon: '☀️',
                                 gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff9a9e 100%)',
+                                backgroundImage: '/images/themes/summer.png',
                                 emoji: '🏖️',
                                 description: 'Hot deals'
                             },
                             'EID': {
                                 icon: '🌙',
                                 gradient: 'linear-gradient(135deg, #1d4e5f 0%, #2d6a4f 50%, #40916c 100%)',
+                                backgroundImage: '/images/themes/eid.png',
                                 emoji: '✨',
                                 description: 'Blessed celebration'
                             }
@@ -276,9 +284,29 @@ export default function ThemeSettingsPage() {
                                         : '0 4px 15px rgba(0,0,0,0.2)',
                                 }}
                             >
+                                {/* Background Image Layer (if available) */}
+                                {config.backgroundImage && (
+                                    <>
+                                        <div style={{
+                                            position: 'absolute',
+                                            inset: 0,
+                                            backgroundImage: `url(${config.backgroundImage})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            opacity: 0.3
+                                        }} />
+                                        {/* Dark overlay for better text readability */}
+                                        <div style={{
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%)'
+                                        }} />
+                                    </>
+                                )}
+
                                 {/* Gradient Background */}
                                 <div style={{
-                                    background: config.gradient,
+                                    background: config.backgroundImage ? 'transparent' : config.gradient,
                                     padding: '24px 20px',
                                     minHeight: '160px',
                                     display: 'flex',
