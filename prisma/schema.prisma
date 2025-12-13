@@ -533,3 +533,13 @@ model Setting {
   key   String @id
   value String
 }
+
+model Media {
+  id        String   @id @default(uuid())
+  url       String   @unique
+  filename  String
+  mimeType  String
+  size      Int
+  altText   String?
+  createdAt DateTime @default(now())
+}
