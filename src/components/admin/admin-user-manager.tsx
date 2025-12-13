@@ -62,6 +62,12 @@ export default function AdminUserManager({ admins, currentAdminId }: { admins: a
         setLoading(true);
 
         try {
+            if (!editingUser && !password) {
+                alert('Password is required for new users');
+                setLoading(false);
+                return;
+            }
+
             const payload = {
                 id: editingUser?.id,
                 name,
