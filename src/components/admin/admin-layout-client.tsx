@@ -247,6 +247,12 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                         { href: '/admin/media', label: 'Media Library' },
                     ]
                 },
+                {
+                    id: 'reports',
+                    href: '/admin/reports/financial',
+                    icon: '📈',
+                    label: 'Financial Reports'
+                },
             ]
         },
         {
