@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // Assuming this alias exists, checking imports later
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
@@ -11,15 +10,16 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get('page') || '1');
-        const limit = parseInt(searchParams.get('limit') || '50'); // Increased limit
+        const limit = parseInt(searchParams.get('limit') || '50');
         const search = searchParams.get('search') || '';
         const offset = (page - 1) * limit;
 
-        // Fetch directly from Supabase Storage to show all existing images
+        // Fetch directly from Supabase Storage
+        // Pass undefined for root path to fix type error
         const { data: files, error } = await supabase
             .storage
             .from('images')
-            .list(null, {
+            .list(undefined, {
                 limit: limit,
                 offset: offset,
                 sortBy: { column: 'created_at', order: 'desc' },
@@ -37,9 +37,9 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        // Map Supabase files to our MediaItem interface
+        // Map Supabase files
         const mediaItems = files
-            .filter(f => f.name !== '.emptyFolderPlaceholder') // Filter out placeholders
+            .filter(f => f.name !== '.emptyFolderPlaceholder')
             .map(file => {
                 const { data: urlData } = supabase
                     .storage
@@ -47,7 +47,8 @@ export async function GET(request: NextRequest) {
                     .getPublicUrl(file.name);
 
                 return {
-                    id: file.id, // Supabase returns an ID for the file object
+                    // Use filename as ID to make deletion easier since we aren't using a DB
+                    id: file.name,
                     url: urlData.publicUrl,
                     filename: file.name,
                     mimeType: file.metadata?.mimetype || 'unknown',
@@ -56,15 +57,11 @@ export async function GET(request: NextRequest) {
                 };
             });
 
-        // Note: Supabase list() doesn't return total count easily without a separate metadata call or unlimited list. 
-        // For now, we'll assume if we got a full page, there might be more.
-        // A robust solution would imply valid pagination, but for "browse" this is sufficient.
-
         return NextResponse.json({
             data: mediaItems,
             pagination: {
-                total: mediaItems.length + (mediaItems.length === limit ? 1 : 0), // Hacky hint for "Next" button
-                pages: -1, // Unknown total pages
+                total: mediaItems.length + (mediaItems.length === limit ? 1 : 0),
+                pages: -1,
                 page,
                 limit
             }
@@ -85,12 +82,12 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // 1. Upload to Supabase (Reusing logic structure from upload/route.ts)
         const buffer = Buffer.from(await file.arrayBuffer());
         const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
-        const filename = `${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`;
+        // Sanitize filename to be ASCII
+        const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const filename = `${Date.now()}_${sanitizedName}`;
 
-        // Determine correct content type
         let contentType = file.type;
         if (!contentType || contentType === 'application/octet-stream') {
             const mimeTypes: Record<string, string> = {
@@ -119,20 +116,15 @@ export async function POST(request: NextRequest) {
             .from('images')
             .getPublicUrl(filename);
 
-        const publicUrl = urlData.publicUrl;
-
-        // 2. Save to Database
-        const media = await prisma.media.create({
-            data: {
-                url: publicUrl,
-                filename: file.name,
-                mimeType: contentType,
-                size: file.size,
-                altText: file.name // Default alt text
-            }
+        // Return structure matching GET
+        return NextResponse.json({
+            id: filename,
+            url: urlData.publicUrl,
+            filename: filename,
+            mimeType: contentType,
+            size: file.size,
+            createdAt: new Date().toISOString()
         });
-
-        return NextResponse.json(media);
 
     } catch (error) {
         console.error('Error uploading media:', error);
@@ -143,35 +135,20 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
-        const id = searchParams.get('id');
+        const filename = searchParams.get('id'); // We are using filename as ID now
 
-        if (!id) {
-            return NextResponse.json({ error: 'Media ID required' }, { status: 400 });
+        if (!filename) {
+            return NextResponse.json({ error: 'Media Filename required' }, { status: 400 });
         }
 
-        const media = await prisma.media.findUnique({ where: { id } });
-        if (!media) {
-            return NextResponse.json({ error: 'Media not found' }, { status: 404 });
+        const { error: deleteError } = await supabase.storage
+            .from('images')
+            .remove([filename]);
+
+        if (deleteError) {
+            console.error('Supabase delete error:', deleteError);
+            return NextResponse.json({ error: 'Failed to delete file from storage' }, { status: 500 });
         }
-
-        // Extract filename from URL or store store path in DB. 
-        // Based on current upload logic: url is `.../storage/v1/object/public/images/FILENAME`
-        // We need just the filename in the bucket.
-        // Quickest way: split by last slash.
-        const storageFilename = media.url.split('/').pop();
-
-        if (storageFilename) {
-            const { error: deleteError } = await supabase.storage
-                .from('images')
-                .remove([storageFilename]);
-
-            if (deleteError) {
-                console.error('Supabase delete warning:', deleteError);
-                // Continue to delete from DB even if file delete fails (or maybe it was already gone)
-            }
-        }
-
-        await prisma.media.delete({ where: { id } });
 
         return NextResponse.json({ success: true });
 
