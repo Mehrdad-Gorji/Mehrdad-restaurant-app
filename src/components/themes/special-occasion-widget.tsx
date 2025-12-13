@@ -17,6 +17,7 @@ interface SpecialOccasionWidgetProps {
 const themeConfigs: Record<string, {
     icon: string;
     gradient: string;
+    backgroundImage?: string;
     accentColor: string;
     textColor: string;
     buttonGradient: string;
@@ -29,6 +30,7 @@ const themeConfigs: Record<string, {
     'BLACK_FRIDAY': {
         icon: '🏷️',
         gradient: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+        backgroundImage: '/images/themes/black-friday.png',
         accentColor: '#ff0000',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #ff0000, #cc0000)',
@@ -46,6 +48,7 @@ const themeConfigs: Record<string, {
     'CHRISTMAS': {
         icon: '🎄',
         gradient: 'linear-gradient(135deg, #165B33 0%, #0D3B22 50%, #165B33 100%)',
+        backgroundImage: '/images/themes/christmas.png',
         accentColor: '#D4AF37',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #C62828, #8B0000)',
@@ -64,6 +67,7 @@ const themeConfigs: Record<string, {
     'NEW_YEAR': {
         icon: '🎆',
         gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        backgroundImage: '/images/themes/new-year.png',
         accentColor: '#FFD700',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #FFD700, #FFA500)',
@@ -81,6 +85,7 @@ const themeConfigs: Record<string, {
     'VALENTINE': {
         icon: '💕',
         gradient: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #c94c4c 100%)',
+        backgroundImage: '/images/themes/valentine.png',
         accentColor: '#ffffff',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #ffffff, #f8f8f8)',
@@ -98,6 +103,7 @@ const themeConfigs: Record<string, {
     'EASTER': {
         icon: '🐰',
         gradient: 'linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #ffd3b6 100%)',
+        backgroundImage: '/images/themes/easter.png',
         accentColor: '#7c4dff',
         textColor: '#1a1a1a',
         buttonGradient: 'linear-gradient(135deg, #7c4dff, #651fff)',
@@ -115,6 +121,7 @@ const themeConfigs: Record<string, {
     'HALLOWEEN': {
         icon: '🎃',
         gradient: 'linear-gradient(135deg, #1a0a24 0%, #2d0c3d 50%, #1a0a24 100%)',
+        backgroundImage: '/images/themes/halloween.png',
         accentColor: '#ff6d00',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #ff6d00, #ff8f00)',
@@ -133,6 +140,7 @@ const themeConfigs: Record<string, {
     'SUMMER': {
         icon: '☀️',
         gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff9a9e 100%)',
+        backgroundImage: '/images/themes/summer.png',
         accentColor: '#ffffff',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #ffffff, #f8f8f8)',
@@ -150,6 +158,7 @@ const themeConfigs: Record<string, {
     'EID': {
         icon: '🌙',
         gradient: 'linear-gradient(135deg, #1d4e5f 0%, #2d6a4f 50%, #40916c 100%)',
+        backgroundImage: '/images/themes/eid.png',
         accentColor: '#FFD700',
         textColor: '#ffffff',
         buttonGradient: 'linear-gradient(135deg, #FFD700, #FFC107)',
@@ -217,6 +226,26 @@ export default function SpecialOccasionWidget({
                 fontFamily: 'system-ui, -apple-system, sans-serif'
             }}
         >
+            {/* Background Image Layer */}
+            {config.backgroundImage && (
+                <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url(${config.backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    opacity: 0.4
+                }} />
+            )}
+
+            {/* Dark Overlay for better text readability */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%)'
+            }} />
+
             {/* Decorative Background Elements */}
             {config.decorativeElements}
 
