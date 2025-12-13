@@ -16,6 +16,7 @@ interface MediaItem {
 export default function ImageUpload({ value, onChange }: Props) {
     const [tab, setTab] = useState<'upload' | 'library'>('upload');
     const [uploading, setUploading] = useState(false);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     // Library state
     const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -33,7 +34,6 @@ export default function ImageUpload({ value, onChange }: Props) {
         formData.append('file', file);
 
         try {
-            // Use the new media API instead of the old upload to ensure it goes to library too
             const res = await fetch('/api/admin/media', {
                 method: 'POST',
                 body: formData
@@ -45,7 +45,6 @@ export default function ImageUpload({ value, onChange }: Props) {
             }
 
             const data = await res.json();
-            // Data returns the whole media object, we need url
             console.log('✅ ImageUpload - Success:', data.url);
             onChange(data.url);
         } catch (error) {
@@ -59,7 +58,7 @@ export default function ImageUpload({ value, onChange }: Props) {
     const fetchLibrary = async (page: number) => {
         setLoadingLibrary(true);
         try {
-            const res = await fetch(`/api/admin/media?page=${page}&limit=12`);
+            const res = await fetch(`/api/admin/media?page=${page}&limit=20`);
             const data = await res.json();
             if (data.data) {
                 setMediaItems(data.data);
@@ -79,44 +78,88 @@ export default function ImageUpload({ value, onChange }: Props) {
         }
     }, [tab, libraryPage]);
 
+    const tabStyle = (isActive: boolean) => ({
+        padding: '8px 16px',
+        fontSize: '14px',
+        fontWeight: isActive ? '600' : '400',
+        borderRadius: '8px',
+        border: 'none',
+        cursor: 'pointer',
+        backgroundColor: isActive ? '#8B5CF6' : 'transparent',
+        color: isActive ? 'white' : '#9ca3af',
+        transition: 'all 0.2s'
+    });
+
     return (
-        <div className="flex flex-col gap-3 p-4 border rounded-lg bg-gray-50">
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            padding: '16px',
+            borderRadius: '12px',
+            backgroundColor: '#1f2937',
+            border: '1px solid #374151'
+        }}>
             {/* Tabs */}
-            <div className="flex gap-2 border-b pb-2">
+            <div style={{
+                display: 'flex',
+                gap: '8px',
+                borderBottom: '1px solid #374151',
+                paddingBottom: '12px'
+            }}>
                 <button
                     type="button"
                     onClick={() => setTab('upload')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${tab === 'upload' ? 'bg-white shadow text-primary font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+                    style={tabStyle(tab === 'upload')}
                 >
-                    Upload New
+                    📤 Upload New
                 </button>
                 <button
                     type="button"
                     onClick={() => setTab('library')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${tab === 'library' ? 'bg-white shadow text-primary font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+                    style={tabStyle(tab === 'library')}
                 >
-                    Select from Library
+                    🖼️ Select from Library
                 </button>
             </div>
 
             {/* Upload Tab */}
             {tab === 'upload' && (
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-2 items-center">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <input
                             type="text"
-                            className="input flex-1"
-                            placeholder="https://... or upload"
+                            placeholder="https://... or upload a file"
                             value={value || ''}
                             onChange={e => onChange(e.target.value)}
+                            style={{
+                                flex: 1,
+                                padding: '10px 14px',
+                                borderRadius: '8px',
+                                border: '1px solid #374151',
+                                backgroundColor: '#111827',
+                                color: 'white',
+                                fontSize: '14px'
+                            }}
                         />
-                        <label className={`btn btn-secondary cursor-pointer whitespace-nowrap ${uploading ? 'opacity-50' : ''}`}>
-                            {uploading ? 'Uploading...' : 'Choose File'}
+                        <label style={{
+                            padding: '10px 20px',
+                            borderRadius: '8px',
+                            backgroundColor: uploading ? '#4b5563' : '#10B981',
+                            color: 'white',
+                            cursor: uploading ? 'not-allowed' : 'pointer',
+                            fontWeight: '600',
+                            fontSize: '14px',
+                            whiteSpace: 'nowrap',
+                            opacity: uploading ? 0.7 : 1,
+                            transition: 'all 0.2s'
+                        }}>
+                            {uploading ? '⏳ Uploading...' : '📁 Choose File'}
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={handleFileChange}
-                                className="hidden"
+                                style={{ display: 'none' }}
                                 disabled={uploading}
                             />
                         </label>
@@ -126,40 +169,121 @@ export default function ImageUpload({ value, onChange }: Props) {
 
             {/* Library Tab */}
             {tab === 'library' && (
-                <div className="flex flex-col gap-3">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {loadingLibrary ? (
-                        <div className="text-center py-4 text-sm text-gray-400">Loading images...</div>
+                        <div style={{ textAlign: 'center', padding: '24px', color: '#9ca3af' }}>
+                            ⏳ Loading images...
+                        </div>
+                    ) : mediaItems.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '24px', color: '#9ca3af' }}>
+                            📭 No images in library. Upload one first!
+                        </div>
                     ) : (
                         <>
-                            <div className="grid grid-cols-4 gap-2 max-h-60 overflow-y-auto p-1">
-                                {mediaItems.map(item => (
-                                    <div
-                                        key={item.id}
-                                        onClick={() => onChange(item.url)}
-                                        className={`cursor-pointer border-2 rounded-md overflow-hidden aspect-square relative hover:opacity-80 transition-all ${value === item.url ? 'border-primary ring-2 ring-primary ring-offset-1' : 'border-transparent'}`}
-                                    >
-                                        <img src={item.url} alt={item.filename} className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
+                            {/* Grid */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+                                gap: '10px',
+                                maxHeight: '250px',
+                                overflowY: 'auto',
+                                padding: '4px'
+                            }}>
+                                {mediaItems.map(item => {
+                                    const isSelected = value === item.url;
+                                    const isHovered = hoveredId === item.id;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            onClick={() => onChange(item.url)}
+                                            onMouseEnter={() => setHoveredId(item.id)}
+                                            onMouseLeave={() => setHoveredId(null)}
+                                            style={{
+                                                aspectRatio: '1/1',
+                                                borderRadius: '8px',
+                                                overflow: 'hidden',
+                                                cursor: 'pointer',
+                                                border: isSelected
+                                                    ? '3px solid #8B5CF6'
+                                                    : isHovered
+                                                        ? '2px solid #6366F1'
+                                                        : '2px solid transparent',
+                                                boxShadow: isSelected
+                                                    ? '0 0 0 3px rgba(139, 92, 246, 0.3)'
+                                                    : 'none',
+                                                transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                                                transition: 'all 0.15s ease',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            <img
+                                                src={item.url}
+                                                alt={item.filename}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                            />
+                                            {isSelected && (
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    inset: 0,
+                                                    backgroundColor: 'rgba(139, 92, 246, 0.3)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: 'white',
+                                                    fontSize: '20px'
+                                                }}>
+                                                    ✓
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
+
+                            {/* Pagination */}
                             {totalPages > 1 && (
-                                <div className="flex justify-between text-xs text-gray-500 pt-2">
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    fontSize: '12px',
+                                    color: '#9ca3af',
+                                    paddingTop: '8px'
+                                }}>
                                     <button
                                         type="button"
                                         disabled={libraryPage === 1}
                                         onClick={() => setLibraryPage(p => p - 1)}
-                                        className="hover:text-primary disabled:opacity-50"
+                                        style={{
+                                            padding: '4px 12px',
+                                            borderRadius: '4px',
+                                            border: 'none',
+                                            backgroundColor: libraryPage === 1 ? '#374151' : '#4b5563',
+                                            color: libraryPage === 1 ? '#6b7280' : 'white',
+                                            cursor: libraryPage === 1 ? 'not-allowed' : 'pointer'
+                                        }}
                                     >
-                                        Previous
+                                        ← Prev
                                     </button>
-                                    <span>{libraryPage} / {totalPages}</span>
+                                    <span>Page {libraryPage}</span>
                                     <button
                                         type="button"
-                                        disabled={libraryPage === totalPages}
+                                        disabled={libraryPage === totalPages || totalPages === -1}
                                         onClick={() => setLibraryPage(p => p + 1)}
-                                        className="hover:text-primary disabled:opacity-50"
+                                        style={{
+                                            padding: '4px 12px',
+                                            borderRadius: '4px',
+                                            border: 'none',
+                                            backgroundColor: libraryPage === totalPages ? '#374151' : '#4b5563',
+                                            color: libraryPage === totalPages ? '#6b7280' : 'white',
+                                            cursor: libraryPage === totalPages ? 'not-allowed' : 'pointer'
+                                        }}
                                     >
-                                        Next
+                                        Next →
                                     </button>
                                 </div>
                             )}
@@ -170,12 +294,45 @@ export default function ImageUpload({ value, onChange }: Props) {
 
             {/* Preview */}
             {value && (
-                <div className="mt-2 relative w-24 h-24 border rounded-lg overflow-hidden bg-white shadow-sm group">
-                    <img src={value} alt="Preview" className="w-full h-full object-cover" />
+                <div style={{
+                    marginTop: '12px',
+                    position: 'relative',
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    border: '2px solid #374151',
+                    backgroundColor: '#111827'
+                }}>
+                    <img
+                        src={value}
+                        alt="Preview"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                        }}
+                    />
                     <button
                         type="button"
                         onClick={() => onChange('')}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{
+                            position: 'absolute',
+                            top: '4px',
+                            right: '4px',
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            backgroundColor: '#EF4444',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                        }}
                         title="Remove image"
                     >
                         ✕
