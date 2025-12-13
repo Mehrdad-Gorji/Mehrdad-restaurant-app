@@ -180,6 +180,7 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                         { href: '/admin/extra-categories', label: 'Extra Categories' },
                         { href: '/admin/settings/sizes', label: 'Size Templates' },
                         { href: '/admin/products/combos', label: 'Combos' },
+                        { href: '/admin/media', label: 'Media Library' },
                     ]
                 },
             ]
