@@ -174,7 +174,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
             const data = await res.json();
             if (res.ok && data.valid) {
                 setCouponDiscount(data.discount);
-                setCouponMessage(`${dictionary?.checkout?.couponApplied || 'Coupon applied'}: -${data.discount} SEK`);
+                setCouponMessage(`${dictionary?.checkout?.couponApplied || 'Coupon applied'}: -${data.discount} ${symbol}`);
                 setIsCouponApplied(true);
             } else {
                 setCouponDiscount(0);
@@ -653,7 +653,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                 transition: 'all 0.3s ease'
                             }}
                         >
-                            {loading ? (dictionary?.checkout?.processing || "Processing...") : `${dictionary?.checkout?.pay || "Pay"} ${finalTotal.toFixed(2)} SEK`}
+                            {loading ? (dictionary?.checkout?.processing || "Processing...") : `${dictionary?.checkout?.pay || "Pay"} ${finalTotal.toFixed(2)} ${symbol}`}
                         </button>
 
                     </form>
@@ -696,7 +696,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                         </div>
                                     )}
                                 </div>
-                                <span style={{ color: '#fff', fontWeight: '500' }}>{(item.price * item.quantity).toFixed(2)} SEK</span>
+                                <span style={{ color: '#fff', fontWeight: '500' }}>{(item.price * item.quantity).toFixed(2)} {symbol}</span>
                             </div>
                         ))}
 
@@ -707,14 +707,14 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                             {/* Subtotal */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>
                                 <span>{dictionary?.checkout?.subtotal || "Subtotal"}</span>
-                                <span>{total.toFixed(2)} SEK</span>
+                                <span>{total.toFixed(2)} {symbol}</span>
                             </div>
 
                             {/* Delivery Fee */}
                             {deliveryMethod === 'DELIVERY' && deliveryFee > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>
                                     <span>{dictionary?.checkout?.deliveryFee || "Delivery Fee"}</span>
-                                    <span>{deliveryFee.toFixed(2)} SEK</span>
+                                    <span>{deliveryFee.toFixed(2)} {symbol}</span>
                                 </div>
                             )}
 
@@ -722,7 +722,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                             {isCouponApplied && couponDiscount > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4ade80', fontSize: '0.95rem' }}>
                                     <span>{dictionary?.checkout?.discount || "Discount"} ({couponCode})</span>
-                                    <span>-{couponDiscount.toFixed(2)} SEK</span>
+                                    <span>-{couponDiscount.toFixed(2)} {symbol}</span>
                                 </div>
                             )}
 
@@ -730,7 +730,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                             {tipAmount > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#ff9800', fontSize: '0.95rem' }}>
                                     <span>{dictionary?.checkout?.driverTip || "Driver Tip"}</span>
-                                    <span>{tipAmount.toFixed(2)} SEK</span>
+                                    <span>{tipAmount.toFixed(2)} {symbol}</span>
                                 </div>
                             )}
                         </div>
@@ -751,11 +751,11 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                 {/* Food VAT */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
                                     <span>{dictionary?.checkout?.foodNet || "Food Net"}</span>
-                                    <span>{foodVAT.net.toFixed(2)} SEK</span>
+                                    <span>{foodVAT.net.toFixed(2)} {symbol}</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
                                     <span>{dictionary?.checkout?.foodVat || "Food VAT"} ({(vatSettings.vatRateReduced * 100).toFixed(0)}%)</span>
-                                    <span>{foodVAT.vat.toFixed(2)} SEK</span>
+                                    <span>{foodVAT.vat.toFixed(2)} {symbol}</span>
                                 </div>
 
                                 {/* Delivery VAT (only if delivery) */}
@@ -763,11 +763,11 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                     <>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
                                             <span>{dictionary?.checkout?.deliveryNet || "Delivery Net"}</span>
-                                            <span>{deliveryVAT.net.toFixed(2)} SEK</span>
+                                            <span>{deliveryVAT.net.toFixed(2)} {symbol}</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
                                             <span>{dictionary?.checkout?.deliveryVat || "Delivery VAT"} ({(vatSettings.vatRateStandard * 100).toFixed(0)}%)</span>
-                                            <span>{deliveryVAT.vat.toFixed(2)} SEK</span>
+                                            <span>{deliveryVAT.vat.toFixed(2)} {symbol}</span>
                                         </div>
                                     </>
                                 )}
@@ -775,7 +775,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                 {/* Total VAT */}
                                 <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '0.5rem', display: 'flex', justifyContent: 'space-between', color: '#ff9800', fontSize: '0.9rem', fontWeight: '600' }}>
                                     <span>{dictionary?.checkout?.totalVat || "Total VAT"}</span>
-                                    <span>{(foodVAT.vat + deliveryVAT.vat).toFixed(2)} SEK</span>
+                                    <span>{(foodVAT.vat + deliveryVAT.vat).toFixed(2)} {symbol}</span>
                                 </div>
                             </div>
                         )}
@@ -931,7 +931,7 @@ export default function CheckoutForm({ dictionary }: { dictionary?: any }) {
                                 background: 'linear-gradient(135deg, #ff9800, #ff5722)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent'
-                            }}>{finalTotal.toFixed(2)} SEK</span>
+                            }}>{finalTotal.toFixed(2)} {symbol}</span>
                         </div>
                     </div>
                 </div>
