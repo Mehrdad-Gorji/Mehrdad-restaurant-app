@@ -138,6 +138,7 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
     const [expandedSections, setExpandedSections] = useState<string[]>(['products', 'settings']);
 
     const [pendingCount, setPendingCount] = useState(0);
+    const [pendingMessages, setPendingMessages] = useState(0);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -147,6 +148,12 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                 if (res.ok) {
                     const data = await res.json();
                     setPendingCount(data.count);
+                }
+
+                const resMsg = await fetch('/api/admin/messages/count');
+                if (resMsg.ok) {
+                    const dataMsg = await resMsg.json();
+                    setPendingMessages(dataMsg.count);
                 }
             } catch (error) {
                 console.error('Failed to fetch order count', error);
@@ -270,7 +277,7 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                     ]
                 },
                 { id: 'about', href: '/admin/about', icon: 'ℹ️', label: 'About Page' },
-                { id: 'messages', href: '/admin/messages', icon: '💬', label: 'Messages' },
+                { id: 'messages', href: '/admin/messages', icon: '💬', label: 'Messages', badge: pendingMessages },
             ]
         },
     ];
