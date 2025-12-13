@@ -282,6 +282,8 @@ export default function ThemeSettingsPage() {
                                     boxShadow: isActive
                                         ? '0 20px 40px rgba(99, 102, 241, 0.4), 0 0 0 3px #8B5CF6'
                                         : '0 4px 15px rgba(0,0,0,0.2)',
+                                    // Make sure background is not transparent if image fails
+                                    background: '#1a1a1a'
                                 }}
                             >
                                 {/* Background Image Layer (if available) */}
@@ -293,7 +295,7 @@ export default function ThemeSettingsPage() {
                                             backgroundImage: `url(${config.backgroundImage})`,
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'center',
-                                            opacity: 0.3
+                                            opacity: 0.4
                                         }} />
                                         {/* Dark overlay for better text readability */}
                                         <div style={{
