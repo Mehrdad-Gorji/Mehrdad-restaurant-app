@@ -44,6 +44,9 @@ export default async function OrderPage({ params }: Props) {
             ...vatSettings
         };
 
+        // Get currency symbol from settings
+        const currencySymbol = settingsRaw?.currencySymbol || 'kr';
+
         // Double-sanitize to ensure no complex objects (like Decimal) leak to Client Components
         const safeOrder = JSON.parse(JSON.stringify(serializePrisma(order)));
 
@@ -285,7 +288,7 @@ export default async function OrderPage({ params }: Props) {
                                             background: 'linear-gradient(135deg, #10b981, #059669)',
                                             WebkitBackgroundClip: 'text',
                                             WebkitTextFillColor: 'transparent'
-                                        }}>{p.amount?.toString()} SEK</span>
+                                        }}>{p.amount?.toString()} {currencySymbol}</span>
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                         <span style={{ color: 'rgba(255,255,255,0.5)' }}>Status</span>
@@ -384,7 +387,7 @@ export default async function OrderPage({ params }: Props) {
                                                         background: 'rgba(245, 158, 11, 0.1)',
                                                         color: '#fbbf24'
                                                     }}>
-                                                        + {oe.extra?.translations?.[0]?.name || oe.name} ({oe.price?.toString()} SEK)
+                                                        + {oe.extra?.translations?.[0]?.name || oe.name} ({oe.price?.toString()} {currencySymbol})
                                                     </span>
                                                 ))}
                                             </div>
@@ -397,7 +400,7 @@ export default async function OrderPage({ params }: Props) {
                                             WebkitBackgroundClip: 'text',
                                             WebkitTextFillColor: 'transparent'
                                         }}>
-                                            {it.price?.toString()} SEK
+                                            {it.price?.toString()} {currencySymbol}
                                         </div>
                                         <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' }}>
                                             Qty: {it.quantity}
@@ -429,27 +432,27 @@ export default async function OrderPage({ params }: Props) {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <span style={{ color: 'rgba(255,255,255,0.6)' }}>Items Subtotal</span>
-                                <span>{itemsSubtotal.toFixed(2)} SEK</span>
+                                <span>{itemsSubtotal.toFixed(2)} {currencySymbol}</span>
                             </div>
 
                             {deliveryFee > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>Delivery Fee</span>
-                                    <span>{deliveryFee.toFixed(2)} SEK</span>
+                                    <span>{deliveryFee.toFixed(2)} {currencySymbol}</span>
                                 </div>
                             )}
 
                             {safeOrder.couponCode && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10b981' }}>
                                     <span>Coupon Discount</span>
-                                    <span>- {Math.abs(discountAmount).toFixed(2)} SEK</span>
+                                    <span>- {Math.abs(discountAmount).toFixed(2)} {currencySymbol}</span>
                                 </div>
                             )}
 
                             {tip > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#f59e0b' }}>
                                     <span>Driver Tip</span>
-                                    <span>{tip.toFixed(2)} SEK</span>
+                                    <span>{tip.toFixed(2)} {currencySymbol}</span>
                                 </div>
                             )}
                         </div>
@@ -474,22 +477,22 @@ export default async function OrderPage({ params }: Props) {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.9rem' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)' }}>
                                         <span>Food Net</span>
-                                        <span>{(itemsSubtotal / (1 + (settings?.vatRateReduced || 0.07))).toFixed(2)} SEK</span>
+                                        <span>{(itemsSubtotal / (1 + (settings?.vatRateReduced || 0.07))).toFixed(2)} {currencySymbol}</span>
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)' }}>
                                         <span>Food VAT ({((settings?.vatRateReduced || 0.07) * 100).toFixed(0)}%)</span>
-                                        <span>{(itemsSubtotal - itemsSubtotal / (1 + (settings?.vatRateReduced || 0.07))).toFixed(2)} SEK</span>
+                                        <span>{(itemsSubtotal - itemsSubtotal / (1 + (settings?.vatRateReduced || 0.07))).toFixed(2)} {currencySymbol}</span>
                                     </div>
 
                                     {deliveryFee > 0 && (
                                         <>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)' }}>
                                                 <span>Delivery Net</span>
-                                                <span>{(deliveryFee / (1 + (settings?.vatRateStandard || 0.19))).toFixed(2)} SEK</span>
+                                                <span>{(deliveryFee / (1 + (settings?.vatRateStandard || 0.19))).toFixed(2)} {currencySymbol}</span>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.5)' }}>
                                                 <span>Delivery VAT ({((settings?.vatRateStandard || 0.19) * 100).toFixed(0)}%)</span>
-                                                <span>{(deliveryFee - deliveryFee / (1 + (settings?.vatRateStandard || 0.19))).toFixed(2)} SEK</span>
+                                                <span>{(deliveryFee - deliveryFee / (1 + (settings?.vatRateStandard || 0.19))).toFixed(2)} {currencySymbol}</span>
                                             </div>
                                         </>
                                     )}
@@ -508,7 +511,7 @@ export default async function OrderPage({ params }: Props) {
                                             {(
                                                 (itemsSubtotal - itemsSubtotal / (1 + (settings?.vatRateReduced || 0.07))) +
                                                 (deliveryFee - deliveryFee / (1 + (settings?.vatRateStandard || 0.19)))
-                                            ).toFixed(2)} SEK
+                                            ).toFixed(2)} {currencySymbol}
                                         </span>
                                     </div>
                                 </div>
@@ -530,7 +533,7 @@ export default async function OrderPage({ params }: Props) {
                                 background: 'linear-gradient(135deg, #10b981, #059669)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent'
-                            }}>{totalOrderAmount.toFixed(2)} SEK</span>
+                            }}>{totalOrderAmount.toFixed(2)} {currencySymbol}</span>
                         </div>
                     </div>
                 </div>
