@@ -58,7 +58,7 @@ export default function AdminOrdersLive() {
 
     // Fetch currency symbol from settings
     useEffect(() => {
-        fetch('/api/site-settings')
+        fetch('/api/settings')
             .then(res => res.json())
             .then(data => {
                 if (data?.currencySymbol) {
