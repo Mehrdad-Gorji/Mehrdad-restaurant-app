@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useCurrency } from '@/hooks/use-currency';
 
 export default function FinancialReportsPage() {
+    // Financial Reports Page
     const { formatPrice, symbol } = useCurrency();
     const [dateRange, setDateRange] = useState({
         start: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0], // Last 30 days
