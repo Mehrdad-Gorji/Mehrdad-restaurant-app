@@ -9,6 +9,8 @@ interface VATSettings {
     vatRateStandard: number;
     vatRateReduced: number;
     vatPriceInclusive: boolean;
+    currency: string;
+    currencySymbol: string;
 }
 
 export default function VATSettingsSection() {
@@ -18,6 +20,8 @@ export default function VATSettingsSection() {
         vatRateStandard: 0.19,
         vatRateReduced: 0.07,
         vatPriceInclusive: true,
+        currency: 'SEK',
+        currencySymbol: 'kr',
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -36,6 +40,8 @@ export default function VATSettingsSection() {
                         vatRateStandard: data.vatRateStandard ?? 0.19,
                         vatRateReduced: data.vatRateReduced ?? 0.07,
                         vatPriceInclusive: data.vatPriceInclusive ?? true,
+                        currency: data.currency ?? 'SEK',
+                        currencySymbol: data.currencySymbol ?? 'kr',
                     });
                 }
             } catch (e) {
@@ -120,6 +126,35 @@ export default function VATSettingsSection() {
                     ✅ VAT settings saved!
                 </div>
             )}
+
+            {/* Currency Settings */}
+            <div style={{ marginBottom: '2rem' }}>
+                <label style={labelStyle}>💱 Currency Settings</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginTop: '0.5rem' }}>
+                    <div>
+                        <label style={{ ...labelStyle, fontSize: '0.8rem', opacity: 0.8 }}>Code (e.g. SEK, EUR)</label>
+                        <input
+                            type="text"
+                            value={settings.currency}
+                            onChange={(e) => handleChange('currency', e.target.value.toUpperCase())}
+                            style={inputStyle}
+                            placeholder="SEK"
+                        />
+                    </div>
+                    <div>
+                        <label style={{ ...labelStyle, fontSize: '0.8rem', opacity: 0.8 }}>Symbol (e.g. kr, €, $)</label>
+                        <input
+                            type="text"
+                            value={settings.currencySymbol}
+                            onChange={(e) => handleChange('currencySymbol', e.target.value)}
+                            style={inputStyle}
+                            placeholder="kr"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '2rem 0' }} />
 
             {/* Enable/Disable VAT */}
             <div style={{ marginBottom: '2rem' }}>

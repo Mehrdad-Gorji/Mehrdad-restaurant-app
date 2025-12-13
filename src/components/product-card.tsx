@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useCurrency } from '@/hooks/use-currency';
 import ProductDetailModal from './product-detail-modal';
 
 interface Props {
@@ -19,6 +20,8 @@ interface Props {
 
 export default function ProductCard({ product, lang }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { formatCurrency } = useCurrency();
+    const { formatCurrency } = useCurrency();
 
     return (
         <>
@@ -130,7 +133,7 @@ export default function ProductCard({ product, lang }: Props) {
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
-                        }}>{product.price} SEK</span>
+                        }}>{formatCurrency(product.price)}</span>
 
                         <button
                             onClick={() => setIsModalOpen(true)}

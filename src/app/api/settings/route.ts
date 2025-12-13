@@ -137,6 +137,10 @@ export async function PUT(request: Request) {
             swedbankPayLogging: body.swedbankPayLogging,
             swishEnabled: body.swishEnabled,
             cardPaymentEnabled: body.cardPaymentEnabled,
+
+            // Currency Settings
+            currency: body.currency,
+            currencySymbol: body.currencySymbol,
         };
 
         if (settings) {

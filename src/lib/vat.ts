@@ -90,6 +90,12 @@ export function formatVATRate(rate: number): string {
  * Format currency amount
  */
 export function formatCurrency(amount: number, currency: string = 'SEK'): string {
+    // If currency is a symbol like €, put it before or after based on convention
+    // Simple heuristic: if length > 1 (like SEK, USD) put after, else before (like $, €)
+    // But user wants consistency. The hook will handle this better.
+    // This helper is for server components or where hook isn't available.
+
+    // Fallback to "Amount Currency" format
     return `${amount.toFixed(2)} ${currency}`;
 }
 
