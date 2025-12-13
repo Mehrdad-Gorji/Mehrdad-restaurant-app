@@ -18,6 +18,9 @@ model User {
   phone     String?
   role      String    @default("USER") // USER, ADMIN
   adminRole String?   // SUPER_ADMIN, MANAGER, STAFF, KITCHEN, DELIVERY
+  lastSeen  DateTime? // For online status
+  workStart String?   // "HH:mm" e.g. "09:00"
+  workEnd   String?   // "HH:mm" e.g. "17:00"
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   orders    Order[]
