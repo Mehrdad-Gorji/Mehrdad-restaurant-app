@@ -341,9 +341,10 @@ export default function SpecialOccasionWidget({
                         padding: '14px 36px',
                         borderRadius: '50px',
                         background: config.buttonGradient,
-                        color: theme === 'VALENTINE' || theme === 'SUMMER' ? config.accentColor :
-                            theme === 'EASTER' ? '#ffffff' :
-                                theme === 'NEW_YEAR' ? '#1a1a2e' : '#ffffff',
+                        color: theme === 'VALENTINE' ? '#c94c4c' :
+                            theme === 'SUMMER' ? '#f5576c' :
+                                theme === 'EASTER' ? '#ffffff' :
+                                    theme === 'NEW_YEAR' ? '#1a1a2e' : '#ffffff',
                         fontSize: '0.95rem',
                         fontWeight: '700',
                         textDecoration: 'none',
