@@ -11,6 +11,9 @@ interface SpecialOccasionWidgetProps {
     customSubtitle?: string;
     customButtonText?: string;
     customBadge?: string;
+    customImage?: string;
+    customColor?: string;
+    customIcon?: string;
 }
 
 // Theme configurations with modern design
@@ -182,7 +185,10 @@ export default function SpecialOccasionWidget({
     customTitle,
     customSubtitle,
     customButtonText,
-    customBadge
+    customBadge,
+    customImage,
+    customColor,
+    customIcon
 }: SpecialOccasionWidgetProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -197,7 +203,30 @@ export default function SpecialOccasionWidget({
 
     if (!isVisible || !theme || theme === 'NONE') return null;
 
-    const config = themeConfigs[theme];
+    let config = themeConfigs[theme];
+
+    // Handle CUSTOM theme
+    if (theme === 'CUSTOM') {
+        config = {
+            icon: customIcon || '🎨',
+            gradient: `linear-gradient(135deg, ${customColor || '#3b82f6'} 0%, #1f2937 100%)`, // Fallback gradient
+            backgroundImage: customImage,
+            accentColor: customColor || '#3b82f6',
+            textColor: '#ffffff',
+            buttonGradient: `linear-gradient(135deg, ${customColor || '#3b82f6'}, ${customColor ? customColor + 'dd' : '#2563eb'})`,
+            defaultTitle: { en: 'SPECIAL OFFER', fa: 'پیشنهاد ویژه' },
+            defaultSubtitle: { en: 'Check out our latest custom deals!', fa: 'از پیشنهادهای ویژه ما دیدن کنید!' },
+            defaultBadge: { en: 'CUSTOM', fa: 'سفارشی' },
+            defaultButton: { en: 'CHECK IT OUT', fa: 'بررسی کنید' },
+            decorativeElements: (
+                <>
+                    <div style={{ position: 'absolute', top: '10%', right: '10%', fontSize: '60px', opacity: 0.1 }}>{customIcon || '✨'}</div>
+                    <div style={{ position: 'absolute', bottom: '10%', left: '10%', fontSize: '50px', opacity: 0.1 }}>{customIcon || '🌟'}</div>
+                </>
+            )
+        };
+    }
+
     if (!config) return null;
 
     const isFa = lang === 'fa';

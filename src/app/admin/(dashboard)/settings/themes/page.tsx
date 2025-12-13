@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import SpecialOccasionWidget from '@/components/themes/special-occasion-widget';
 import ResponsiveGrid from '@/components/admin/responsive-grid';
+import ImageUpload from '@/components/admin/image-upload';
 
 const THEMES = [
     'NONE',
+    'CUSTOM',
     'BLACK_FRIDAY',
     'CHRISTMAS',
     'NEW_YEAR',
@@ -22,6 +24,12 @@ export default function ThemeSettingsPage() {
     const [customSubtitle, setCustomSubtitle] = useState('');
     const [customButtonText, setCustomButtonText] = useState('');
     const [customBadge, setCustomBadge] = useState('');
+
+    // Custom Theme State
+    const [customImage, setCustomImage] = useState('');
+    const [customColor, setCustomColor] = useState('#3b82f6');
+    const [customIcon, setCustomIcon] = useState('🎨');
+
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -37,11 +45,19 @@ export default function ThemeSettingsPage() {
                     const btn = data.find((s: any) => s.key === 'theme_custom_button');
                     const badge = data.find((s: any) => s.key === 'theme_custom_badge');
 
+                    const cImage = data.find((s: any) => s.key === 'theme_custom_image');
+                    const cColor = data.find((s: any) => s.key === 'theme_custom_color');
+                    const cIcon = data.find((s: any) => s.key === 'theme_custom_icon');
+
                     if (theme) setActiveTheme(theme.value);
                     if (title) setCustomTitle(title.value);
                     if (subtitle) setCustomSubtitle(subtitle.value);
                     if (btn) setCustomButtonText(btn.value);
                     if (badge) setCustomBadge(badge.value);
+
+                    if (cImage) setCustomImage(cImage.value);
+                    if (cColor) setCustomColor(cColor.value);
+                    if (cIcon) setCustomIcon(cIcon.value);
                 }
                 setLoading(false);
             })
@@ -54,33 +70,17 @@ export default function ThemeSettingsPage() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            // Save all 4 settings concurrently
+            // Save all settings concurrently
             await Promise.all([
-                fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: 'active_theme', value: activeTheme })
-                }),
-                fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: 'theme_custom_title', value: customTitle })
-                }),
-                fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: 'theme_custom_subtitle', value: customSubtitle })
-                }),
-                fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: 'theme_custom_button', value: customButtonText })
-                }),
-                fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: 'theme_custom_badge', value: customBadge })
-                })
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'active_theme', value: activeTheme }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_title', value: customTitle }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_subtitle', value: customSubtitle }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_button', value: customButtonText }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_badge', value: customBadge }) }),
+
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_image', value: customImage }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_color', value: customColor }) }),
+                fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: 'theme_custom_icon', value: customIcon }) }),
             ]);
 
             // Show floating success toast simulation
@@ -125,6 +125,27 @@ export default function ThemeSettingsPage() {
         fontWeight: '500'
     };
 
+    const sectionStyle = {
+        background: 'rgba(255,255,255,0.03)',
+        borderRadius: '24px',
+        padding: '2rem',
+        border: '1px solid rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(10px)'
+    };
+
+    const sectionHeaderStyle = {
+        marginTop: 0,
+        marginBottom: '1.5rem',
+        fontSize: '1.25rem',
+        fontWeight: '700',
+        color: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        paddingBottom: '1rem'
+    };
+
     if (loading) return <div style={{ padding: '2rem', color: 'rgba(255,255,255,0.5)' }}>Loading themes...</div>;
 
     return (
@@ -167,13 +188,7 @@ export default function ThemeSettingsPage() {
                 </button>
             </div>
 
-            <div style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderRadius: '24px',
-                padding: '2rem',
-                border: '1px solid rgba(255,255,255,0.05)',
-                backdropFilter: 'blur(10px)'
-            }}>
+            <div style={sectionStyle}>
                 <h2 style={{
                     marginTop: 0,
                     marginBottom: '1.5rem',
@@ -188,7 +203,7 @@ export default function ThemeSettingsPage() {
                 }}>🎨 Select Active Theme</h2>
                 <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '2rem', fontSize: '0.95rem' }}>
                     Choose a theme to display a special banner on the Homepage and User Dashboard.
-                    Select "NONE" to disable.
+                    Select "CUSTOM" to design your own.
                 </p>
 
                 <div style={{
@@ -206,6 +221,13 @@ export default function ThemeSettingsPage() {
                                 gradient: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
                                 emoji: '🌐',
                                 description: 'Default look'
+                            },
+                            'CUSTOM': {
+                                icon: customIcon || '🎨',
+                                gradient: `linear-gradient(135deg, ${customColor} 0%, #1f2937 100%)`,
+                                backgroundImage: customImage,
+                                emoji: '✨',
+                                description: 'Your custom design'
                             },
                             'BLACK_FRIDAY': {
                                 icon: '🏷️',
@@ -282,7 +304,6 @@ export default function ThemeSettingsPage() {
                                     boxShadow: isActive
                                         ? '0 20px 40px rgba(99, 102, 241, 0.4), 0 0 0 3px #8B5CF6'
                                         : '0 4px 15px rgba(0,0,0,0.2)',
-                                    // Make sure background is not transparent if image fails
                                     background: '#1a1a1a'
                                 }}
                             >
@@ -297,7 +318,7 @@ export default function ThemeSettingsPage() {
                                             backgroundPosition: 'center',
                                             opacity: 0.4
                                         }} />
-                                        {/* Dark overlay for better text readability */}
+                                        {/* Dark overlay */}
                                         <div style={{
                                             position: 'absolute',
                                             inset: 0,
@@ -409,30 +430,72 @@ export default function ThemeSettingsPage() {
                 </div>
             </div>
 
+            {/* Custom Design Section (Only visible for CUSTOM theme) */}
+            {activeTheme === 'CUSTOM' && (
+                <div style={{ ...sectionStyle, marginTop: '2rem' }}>
+                    <h2 style={sectionHeaderStyle}>🛠️ Design Your Theme</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                        <div>
+                            <label style={labelStyle}>Background Image</label>
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <ImageUpload
+                                    value={customImage}
+                                    onChange={(url) => setCustomImage(url)}
+                                // Make sure it doesn't break if props differ slightly, using standard props
+                                />
+                            </div>
+                            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>
+                                Recommend 1920x600px or larger.
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            <div>
+                                <label style={labelStyle}>Accent Color</label>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                                    <input
+                                        type="color"
+                                        value={customColor}
+                                        onChange={e => setCustomColor(e.target.value)}
+                                        style={{
+                                            width: '50px',
+                                            height: '50px',
+                                            borderRadius: '12px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            background: 'none'
+                                        }}
+                                    />
+                                    <input
+                                        value={customColor}
+                                        onChange={e => setCustomColor(e.target.value)}
+                                        style={{ ...inputStyle, marginTop: 0 }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style={labelStyle}>Theme Icon (Emoji)</label>
+                                <input
+                                    value={customIcon}
+                                    onChange={e => setCustomIcon(e.target.value)}
+                                    placeholder="e.g. 🚀"
+                                    style={inputStyle}
+                                    maxLength={2}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Preview Section */}
             {activeTheme !== 'NONE' && (
-                <ResponsiveGrid columns="1-1" gap="2rem" style={{ marginTop: '3rem' }}>
+                <ResponsiveGrid columns="1-1" gap="2rem" style={{ marginTop: '2rem' }}>
 
                     {/* CUSTOM TEXT SECTION */}
-                    <div style={{
-                        background: 'rgba(255,255,255,0.03)',
-                        borderRadius: '24px',
-                        padding: '2rem',
-                        border: '1px solid rgba(255,255,255,0.05)',
-                        backdropFilter: 'blur(10px)'
-                    }}>
-                        <h2 style={{
-                            marginTop: 0,
-                            marginBottom: '1.5rem',
-                            fontSize: '1.25rem',
-                            fontWeight: '700',
-                            color: '#fff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.75rem',
-                            borderBottom: '1px solid rgba(255,255,255,0.05)',
-                            paddingBottom: '1rem'
-                        }}>✍️ Custom Text</h2>
+                    <div style={sectionStyle}>
+                        <h2 style={sectionHeaderStyle}>✍️ Custom Text</h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div>
@@ -442,6 +505,7 @@ export default function ThemeSettingsPage() {
                                     onChange={e => setCustomBadge(e.target.value)}
                                     placeholder="e.g. SPECIAL OFFER"
                                     style={inputStyle}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -452,6 +516,7 @@ export default function ThemeSettingsPage() {
                                     onChange={e => setCustomTitle(e.target.value)}
                                     placeholder="e.g. Merry Christmas"
                                     style={inputStyle}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -462,6 +527,7 @@ export default function ThemeSettingsPage() {
                                     onChange={e => setCustomSubtitle(e.target.value)}
                                     placeholder="e.g. Celebrate the magic of the season"
                                     style={inputStyle}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -472,6 +538,7 @@ export default function ThemeSettingsPage() {
                                     onChange={e => setCustomButtonText(e.target.value)}
                                     placeholder="e.g. View Holiday Menu"
                                     style={inputStyle}
+                                    disabled={loading}
                                 />
                             </div>
                         </div>
@@ -497,6 +564,10 @@ export default function ThemeSettingsPage() {
                                     customSubtitle={customSubtitle}
                                     customButtonText={customButtonText}
                                     customBadge={customBadge}
+                                    // Custom Theme Props
+                                    customImage={customImage}
+                                    customColor={customColor}
+                                    customIcon={customIcon}
                                 />
                             </div>
                         </div>
