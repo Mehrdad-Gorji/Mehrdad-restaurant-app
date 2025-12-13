@@ -18,10 +18,12 @@ interface NavItemProps {
     isActive: boolean;
     subItems?: { href: string; label: string }[];
     isExpanded?: boolean;
+
     onToggle?: () => void;
+    badge?: number;
 }
 
-function NavItem({ href, icon, label, isActive, subItems, isExpanded, onToggle }: NavItemProps) {
+function NavItem({ href, icon, label, isActive, subItems, isExpanded, onToggle, badge }: NavItemProps) {
     const pathname = usePathname();
     const hasSubItems = subItems && subItems.length > 0;
     const isSubActive = subItems?.some(sub => pathname === sub.href);
@@ -57,6 +59,25 @@ function NavItem({ href, icon, label, isActive, subItems, isExpanded, onToggle }
                 >
                     <span style={{ fontSize: '1.1rem' }}>{icon}</span>
                     <span>{label}</span>
+                    {badge !== undefined && badge > 0 && (
+                        <span style={{
+                            marginLeft: 'auto',
+                            background: '#EF4444',
+                            color: 'white',
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '12px',
+                            minWidth: '20px',
+                            textAlign: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 5px rgba(239, 68, 68, 0.4)'
+                        }}>
+                            {badge}
+                        </span>
+                    )}
                 </Link>
                 {hasSubItems && (
                     <span
@@ -115,7 +136,27 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
     const [expandedSections, setExpandedSections] = useState<string[]>(['products', 'settings']);
+
+    const [pendingCount, setPendingCount] = useState(0);
     const pathname = usePathname();
+
+    useEffect(() => {
+        const fetchCount = async () => {
+            try {
+                const res = await fetch('/api/admin/orders/count');
+                if (res.ok) {
+                    const data = await res.json();
+                    setPendingCount(data.count);
+                }
+            } catch (error) {
+                console.error('Failed to fetch order count', error);
+            }
+        };
+
+        fetchCount();
+        const interval = setInterval(fetchCount, 30000); // Poll every 30s
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -163,7 +204,7 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
             title: 'Main',
             items: [
                 { id: 'dashboard', href: '/admin', icon: '📊', label: 'Dashboard' },
-                { id: 'orders', href: '/admin/orders', icon: '📦', label: 'Orders' },
+                { id: 'orders', href: '/admin/orders', icon: '📦', label: 'Orders', badge: pendingCount },
             ]
         },
         {
@@ -355,8 +396,10 @@ export default function AdminLayoutClient({ admin, showUsersMenu, children }: Ad
                                         label={item.label}
                                         isActive={pathname === item.href}
                                         subItems={(item as any).subItems}
+
                                         isExpanded={expandedSections.includes(item.id)}
                                         onToggle={() => toggleSection(item.id)}
+                                        badge={(item as any).badge}
                                     />
                                 ))}
                             </div>
